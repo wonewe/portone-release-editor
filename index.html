@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>PortOne 릴리즈노트 편집기</title>
+  <title>PortOne 고객 지원 문서 편집기</title>
   <style>
     * { box-sizing: border-box; }
     body { 
@@ -173,10 +173,133 @@
       height: 180px;
       resize: vertical;
     }
+
+    .uploader {
+      margin-bottom: 16px;
+      padding: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+    }
+
+    .uploader h3 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .drop-zone {
+      position: relative;
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 20px;
+      background: #ffffff;
+      text-align: center;
+      color: #6b7280;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .drop-zone button {
+      margin: 0;
+      background: #f3f4f6;
+      color: #1f2937;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .drop-zone button:hover {
+      background: #e5e7eb;
+    }
+
+    .drop-zone.dragover {
+      border-color: #2873ff;
+      background: #f0f6ff;
+      color: #1f2937;
+    }
+
+    .upload-status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #4b5563;
+      min-height: 16px;
+    }
+
+    .upload-status.error {
+      color: #dc2626;
+    }
+
+    .uploaded-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .uploaded-item {
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .uploaded-item-preview {
+      max-height: 120px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .uploaded-item textarea {
+      font-size: 12px;
+      min-height: 48px;
+      resize: none;
+    }
+
+    .uploaded-item-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .uploaded-item-actions button {
+      padding: 6px 12px;
+      background: #eef2ff;
+      color: #1e3a8a;
+      border: 1px solid #c7d2fe;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .uploaded-item-actions button:hover {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .uploaded-item a {
+      color: #2873ff;
+      font-size: 12px;
+      word-break: break-all;
+    }
   </style>
 </head>
 <body>
-  <header>📢 PortOne 릴리즈노트 편집기</header>
+  <header>📢 PortOne 고객 지원 문서 편집기</header>
 
   <main>
     <!-- 1️⃣ HTML 입력 -->
@@ -508,6 +631,19 @@
     <!-- 2️⃣ 텍스트 편집 -->
     <div class="col">
       <h2>2️⃣ 텍스트 편집</h2>
+      <section class="uploader" aria-label="이미지 업로드">
+        <h3>이미지 업로드 (Cloudinary)</h3>
+        <p style="margin:0 0 12px; font-size:12px; color:#4b5563;">
+          이미지를 드래그 앤 드롭하거나 파일 선택을 누르면 자동으로 업로드되고 URL이 생성됩니다.
+        </p>
+        <div class="drop-zone" id="dropZone">
+          <p style="margin:0; font-size:13px;">이미지 파일을 여기에 드롭하거나 파일 선택을 누르세요.</p>
+          <button type="button" id="filePickerBtn">파일 선택</button>
+          <input type="file" id="filePicker" accept="image/*" hidden>
+        </div>
+        <div class="upload-status" id="uploadStatus"></div>
+        <div class="uploaded-list" id="uploadedList"></div>
+      </section>
       <div class="text-editor" id="textEditor"></div>
     </div>
 
@@ -525,6 +661,17 @@
     const textEditor = document.getElementById('textEditor');
     const loadBtn = document.getElementById('loadBtn');
     const templateButtons = document.querySelectorAll('.template-btn');
+    const dropZone = document.getElementById('dropZone');
+    const filePicker = document.getElementById('filePicker');
+    const filePickerBtn = document.getElementById('filePickerBtn');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const uploadedList = document.getElementById('uploadedList');
+
+    const CLOUDINARY_DEFAULT = {
+      cloudName: 'dcam5f9ci',
+      uploadPreset: 'Portone',
+    };
+    let cloudinaryConfig = { ...CLOUDINARY_DEFAULT };
 
     const releaseTemplate = htmlInput.value.trim();
     const noticeTemplate = `
@@ -600,6 +747,119 @@
     };
 
     let textNodes = [];
+    let isUploading = false;
+
+    function setUploadStatus(message, isError = false) {
+      if (!uploadStatus) return;
+      uploadStatus.textContent = message;
+      uploadStatus.classList.toggle('error', Boolean(isError));
+    }
+
+    function validateCloudinaryConfig() {
+      const { cloudName, uploadPreset } = cloudinaryConfig;
+      const placeholders = ['your_cloud_name', 'your_unsigned_preset', ''];
+      if (placeholders.includes(cloudName) || placeholders.includes(uploadPreset)) {
+        setUploadStatus('Cloudinary 설정이 필요합니다. 코드 상단의 CLOUDINARY_DEFAULT 값을 실제 값으로 바꿔주세요.', true);
+        return false;
+      }
+      return true;
+    }
+
+    function createSnippet(url) {
+      return `<img src="${url}" alt="">`;
+    }
+
+    function addUploadedItem({ secure_url: url, original_filename: name, public_id }) {
+      if (!uploadedList || !url) return;
+      const item = document.createElement('div');
+      item.className = 'uploaded-item';
+
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = name || public_id || 'uploaded image';
+      img.className = 'uploaded-item-preview';
+      item.appendChild(img);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = '이미지 URL 보기';
+      item.appendChild(link);
+
+      const snippet = document.createElement('textarea');
+      snippet.readOnly = true;
+      snippet.value = createSnippet(url);
+      item.appendChild(snippet);
+
+      const actions = document.createElement('div');
+      actions.className = 'uploaded-item-actions';
+
+      const copyUrlBtn = document.createElement('button');
+      copyUrlBtn.type = 'button';
+      copyUrlBtn.textContent = 'URL 복사';
+      copyUrlBtn.addEventListener('click', () => copyToClipboard(url, '이미지 URL이 복사되었습니다.'));
+      actions.appendChild(copyUrlBtn);
+
+      const copyImgBtn = document.createElement('button');
+      copyImgBtn.type = 'button';
+      copyImgBtn.textContent = '<img> 태그 복사';
+      copyImgBtn.addEventListener('click', () => copyToClipboard(snippet.value, '<img> 태그가 복사되었습니다.'));
+      actions.appendChild(copyImgBtn);
+
+      item.appendChild(actions);
+      uploadedList.prepend(item);
+    }
+
+    function copyToClipboard(value, successMessage) {
+      if (!navigator.clipboard) {
+        setUploadStatus('클립보드 접근을 지원하지 않는 환경입니다.', true);
+        return;
+      }
+      navigator.clipboard.writeText(value)
+        .then(() => setUploadStatus(successMessage))
+        .catch(() => setUploadStatus('클립보드 복사에 실패했습니다.', true));
+    }
+
+    async function uploadImage(file) {
+      if (!validateCloudinaryConfig() || !file || isUploading) return;
+      isUploading = true;
+      setUploadStatus(`"${file.name}" 업로드 중...`);
+
+      const endpoint = `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`;
+      const data = new FormData();
+      data.append('file', file);
+      data.append('upload_preset', cloudinaryConfig.uploadPreset);
+
+      try {
+        const response = await fetch(endpoint, { method: 'POST', body: data });
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || `HTTP ${response.status}`);
+        }
+        const result = await response.json();
+        addUploadedItem(result);
+        setUploadStatus('업로드가 완료되었습니다.');
+      } catch (error) {
+        console.error('Cloudinary upload failed', error);
+        setUploadStatus('업로드 중 오류가 발생했습니다. 설정을 확인해 주세요.', true);
+      } finally {
+        isUploading = false;
+      }
+    }
+
+    async function handleFileList(fileList) {
+      if (!fileList || fileList.length === 0) return;
+      const files = Array.from(fileList).filter(file => file.type.startsWith('image/'));
+      if (files.length === 0) {
+        setUploadStatus('이미지 파일만 업로드할 수 있습니다.', true);
+        return;
+      }
+      if (!validateCloudinaryConfig()) return;
+      for (const file of files) {
+        await uploadImage(file);
+      }
+    }
 
     function selectTemplate(key) {
       const template = templates[key];
@@ -651,6 +911,46 @@
         } else {
           traverse(child);
         }
+      });
+    }
+
+    if (!validateCloudinaryConfig()) {
+      // 이미 오류 메시지를 표시했으므로 추가 안내는 생략합니다.
+    } else {
+      setUploadStatus('이미지를 업로드하려면 파일을 드롭하거나 선택하세요.');
+    }
+
+    if (dropZone) {
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          dropZone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'dragend', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          dropZone.classList.remove('dragover');
+        });
+      });
+
+      dropZone.addEventListener('drop', (event) => {
+        handleFileList(event.dataTransfer?.files);
+      });
+
+      dropZone.addEventListener('click', () => {
+        filePicker?.click();
+      });
+    }
+
+    if (filePickerBtn && filePicker) {
+      filePickerBtn.addEventListener('click', () => filePicker.click());
+      filePicker.addEventListener('change', () => {
+        handleFileList(filePicker.files);
+        filePicker.value = '';
       });
     }
 
