@@ -1,42 +1,45 @@
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 const DEFAULT_CONTENT = {
-  hero_date: '10월 31일의',
-  hero_title: '정발행 세금계산서 출시 안내',
-  hero_intro: '안녕하세요 포트원 파트너정산 팀입니다. /n 8월 21일, 정발행 세금계산서를 콘솔에서 이용하실 수 있는 업데이트가 진행되어 안내드립니다. /n 이제 공급자가 직접 세금계산서를 발행할 수 있어 거래처 신뢰성을 높이고, 세무 안정성을 강화할 수 있습니다. 기존 역발행과 함께, 정발행을 모두 지원하여 다양한 거래 상황에 유연하게 대응할 수 있습니다.',
+  hero_date: '2025년 3월 2주차',
+  hero_title: 'PortOne 주요 업데이트',
+  hero_intro: '이번 릴리즈에서는 자동화와 운영 효율을 높일 수 있는 기능 개선 사항을 중심으로 안내드립니다.',
   cards: [
-    { title: '세금계산서 정발행 기능 출시', summary: '정발행 세금계산서를 발행하고 관리' },
-    { title: '엑셀, CSV 일괄 정/역발행', summary: '세금계산서를 엑셀과 CSV로 일괄 발행' },
-    { title: '세금계산서 내역 관리', summary: '내역 관리 페이지에서 필터와 상태 추가' },
-    { title: '세금계산서 안내 메일 발송', summary: '공급받는자에게 이메일 발송' },
+    { title: '정산 자동화', summary: '지급 일정 자동화와 드릴다운 리포트가 새로 추가되었습니다.' },
+    { title: 'API 개선', summary: 'Webhook 응답 구조가 단순해지고 누락 알림 안전장치가 강화되었습니다.' },
+    { title: '운영 도구', summary: '고객지원 팀을 위한 권한 관리와 히스토리 추적 기능이 공개됩니다.' },
+    { title: '새로운 인사이트', summary: '일간 대시보드에 추세 비교와 예상 누락 탐지가 표시됩니다.' },
   ],
   sections: [
     {
-      label: '세금계산서 정발행 기능 출시',
-      title: '고객에게 발행하는 정발행 세금계산서를 발행하고 관리할 수 있습니다.',
-      body: '이제, 역발행 뿐 아니라 정발행 기능을 콘솔에서 사용할 수 있습니다. 단건 발행 및 일괄 발행으로 정발행 세금계산서를 발행할 수 있게 되어 정산뿐만 아니라 모든 거래에 대한 세금계산서 커버가 가능해집니다. 기존 역발행과 다르게 정발행은 파트너 등록 및 국세청 연동 없이 이용할 수 있으며, 파트너 등록을 하지 않더라도 정발행시 입력한 공급받는 자(거래처) 정보를 다시 불러와 사용할 수 있습니다.',
+      label: '정산/회계',
+      title: '정산 일정 자동화 기능이 베타에서 정식 전환됩니다',
+      body: '정산 대상 추출, 지급 승인, 전표 업로드까지 모든 단계가 자동 실행됩니다. 수기 처리 시간을 크게 줄일 수 있습니다.',
     },
     {
-      label: '엑셀, CSV 일괄 정/역발행',
-      title: '세금계산서를 엑셀과 CSV로 간편하게 일괄 발행할 수 있습니다.',
-      body: '기존 일괄 세금계산서 발행은 CSV 파일만 지원되었지만, 이번 업데이트를 통해 엑셀 파일 업로드도 가능해집니다. 제공되는 엑셀 및 CSV 파일 양식을 다운로드 받아 일괄적으로 세금계산서를 작성하여 업로드할 수 있습니다. 기존 역발행과 동일하게 미리보기 후 임시 저장하거나 즉시 발행할 수 있습니다.',
+      label: '개발자 경험',
+      title: 'Webhook 재시도 로직과 서명 검증이 간소화됩니다',
+      body: '신규 SDK와 함께 서명 검증이 표준화되고, 실패 알림을 자동으로 슬랙/이메일로 받을 수 있습니다.',
     },
     {
-      label: '세금계산서 내역 관리',
-      title: '세금계산서 내역과 일괄 세금계산서 내역 관리에 필터와 상태가 추가됩니다.',
-      body: '기존 역발행 건과 정발행 건의 자연스러운 통합을 위해 세금계산서 내역 관리 페이지에 발행 유형 필터가 추가됩니다. 세금계산서 내역 테이블 내 사업자 정보 컬럼이 기존 공급자 정보에서 거래처(공급자/공급받는자) 정보로 변경되어 역발행의 경우 공급자, 정발행의 경우 공급받는자 정보가 표기됩니다. 일괄 세금계산서 내역 관리 페이지에서 발행 대기 상태와 발행 실패 상태가 추가됩니다. 발행 대기 상태는 일괄 세금계산서 발행 처리 중 상태를 의미하며 발행 실패 상태는 시스템 처리 실패를 의미합니다. 또한 정발행과 역발행을 구분하는 발행 유형 정보 및 필터가 추가됩니다'
+      label: '운영 도구',
+      title: '고객지원 도구에 상세 로그와 역할 기반 권한이 추가됩니다',
+      body: '각 팀에 필요한 기능만 노출하도록 역할을 분리하고, 모든 변경 이력을 검색할 수 있습니다.',
     },
     {
-      label: '세금계산서 안내 메일 발송',
-      title: '공급받는 자에게 이메일이 발송됩니다.',
-      body: '세금계산서를 발행하는 시점에 공급받는자 (고객) 에게 팝빌 (포트원과 연동된 세금계산서 서비스) 로부터 이메일이 발송됩니다. 공급자는 발행 주체이므로, 별도의 알림 이메일은 발송되지 않습니다.',
+      label: '데이터 인사이트',
+      title: '일간 대시보드에 추세 비교와 목표 대비 지표가 공개됩니다',
+      body: '주요 매출 지표와 전주 대비 추세를 한 화면에서 볼 수 있으며, 이상 감지 알림을 설정할 수 있습니다.',
     },
   ],
-  footer_date: '2025년 10월 31일',
+  cta_body: '신규 기능은 포트원 콘솔 > 설정 > 실험실 메뉴에서 바로 경험할 수 있습니다.',
+  cta_button_text: '콘솔에서 살펴보기',
+  cta_url: 'https://console.portone.io',
+  footer_date: '2025-03-12',
+  footer_message: '이번 업데이트가 파트너 여러분의 운영 효율을 높이는 데 도움이 되길 바랍니다.',
 };
 
 const RESPONSE_SCHEMA = {
@@ -48,9 +51,9 @@ const RESPONSE_SCHEMA = {
       additionalProperties: false,
       required: ['hero_date', 'hero_title', 'hero_intro', 'cards', 'sections'],
       properties: {
-        hero_date: { type: 'string', description: '예: 10월 31일' },
+        hero_date: { type: 'string', description: '예: 2025년 3월 2주차' },
         hero_title: { type: 'string', description: '히어로 영역의 메인 제목' },
-        hero_intro: { type: 'string', description: '히어로 영역의 도입 문장' },
+        hero_intro: { type: 'string', description: '히어로 영역의 간단한 도입 문장' },
         cards: {
           type: 'array',
           minItems: 4,
@@ -80,7 +83,11 @@ const RESPONSE_SCHEMA = {
             },
           },
         },
+        cta_body: { type: 'string', description: 'CTA 영역의 설명 문장' },
+        cta_button_text: { type: 'string', description: 'CTA 버튼 라벨' },
+        cta_url: { type: 'string', description: 'CTA 버튼 링크 URL' },
         footer_date: { type: 'string', description: '푸터 작성일자' },
+        footer_message: { type: 'string', description: '푸터에서 전달할 추가 메시지' },
       },
     },
   },
@@ -129,7 +136,57 @@ exports.handler = async (event) => {
   }
 
   try {
-    const aiResult = await getReleaseDraftFromOpenAI({ apiKey, brief });
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4.1-mini',
+        input: [
+          {
+            role: 'system',
+            content:
+              'You are an assistant that drafts concise Korean release notes for PortOne B2B customers. ' +
+              'Respond using the provided JSON schema only. Focus on product improvements, automation tips, and clear action items.',
+          },
+          {
+            role: 'user',
+            content: `기획서:\n${brief}`,
+          },
+        ],
+        response_format: RESPONSE_SCHEMA,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('OpenAI error response:', data);
+      return {
+        statusCode: response.status,
+        headers: corsHeaders,
+        body: JSON.stringify({ error: 'OpenAI API 호출 중 오류가 발생했습니다.' }),
+      };
+    }
+
+    const textContent =
+      data?.output?.[0]?.content?.[0]?.text ||
+      data?.output?.text ||
+      data?.content?.[0]?.text;
+
+    if (!textContent) {
+      throw new Error('OpenAI 응답에서 텍스트를 찾을 수 없습니다.');
+    }
+
+    let aiResult;
+    try {
+      aiResult = JSON.parse(textContent);
+    } catch (error) {
+      console.error('JSON parsing failed:', textContent);
+      throw new Error('AI 응답을 JSON으로 변환할 수 없습니다.');
+    }
 
     const html = buildHtmlFromData(aiResult);
 
@@ -140,125 +197,14 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error('AI generation handler error:', error);
-    const statusCode = error.statusCode || 500;
-    const message = error.publicMessage || 'AI 작성 중 오류가 발생했습니다.';
     return {
-      statusCode,
+      statusCode: 500,
       headers: corsHeaders,
-      body: JSON.stringify({ error: message }),
+      body: JSON.stringify({ error: 'AI 작성 중 오류가 발생했습니다.' }),
     };
   }
 };
 
-async function getReleaseDraftFromOpenAI({ apiKey, brief }) {
-  // 1) 우선 Responses API 시도
-  const responsesRes = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4.1-mini',
-      input: [
-        {
-          role: 'system',
-          content:
-            'You are an assistant that drafts concise Korean release notes for PortOne B2B customers. ' +
-            'Respond using the provided JSON schema only. Focus on product improvements, automation tips, and clear action items.',
-        },
-        { role: 'user', content: `기획서:\n${brief}` },
-      ],
-      response_format: RESPONSE_SCHEMA,
-    }),
-  });
-
-  const responsesData = await safeReadJson(responsesRes);
-  if (responsesRes.ok) {
-    const textContent =
-      responsesData?.output?.[0]?.content?.[0]?.text ||
-      responsesData?.output_text ||
-      responsesData?.content?.[0]?.text;
-    if (!textContent) {
-      throw createPublicError(500, 'OpenAI 응답에서 텍스트를 찾을 수 없습니다.');
-    }
-    try {
-      return JSON.parse(textContent);
-    } catch (e) {
-      console.error('JSON parsing failed (responses):', textContent);
-      throw createPublicError(500, 'AI 응답을 JSON으로 변환할 수 없습니다.');
-    }
-  }
-
-  // Responses 실패 → 자세한 오류 메시지 확보
-  const openAiErrorMsg = extractOpenAIError(responsesData) || 'OpenAI API 호출 중 오류가 발생했습니다.';
-
-  // 2) Chat Completions API로 폴백 시도 (일부 계정에서 Responses 미개통)
-  const chatRes = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are an assistant that drafts concise Korean release notes for PortOne B2B customers. ' +
-            'Output strictly as minified JSON matching the given schema. No extra commentary.',
-        },
-        { role: 'user', content: `기획서:\n${brief}` },
-      ],
-      // Chat API의 json_schema 포맷 지원 모델에서만 동작. 미지원 시 minified JSON 강제 프롬프트에 의존.
-      response_format: RESPONSE_SCHEMA,
-      temperature: 0.2,
-    }),
-  });
-
-  const chatData = await safeReadJson(chatRes);
-  if (chatRes.ok) {
-    const content = chatData?.choices?.[0]?.message?.content;
-    if (!content) {
-      throw createPublicError(500, 'OpenAI 응답에서 텍스트를 찾을 수 없습니다.');
-    }
-    try {
-      return JSON.parse(content);
-    } catch (e) {
-      console.error('JSON parsing failed (chat):', content);
-      throw createPublicError(500, 'AI 응답을 JSON으로 변환할 수 없습니다.');
-    }
-  }
-
-  // 폴백도 실패 → 보다 구체적인 에러 표출
-  const chatErrorMsg = extractOpenAIError(chatData);
-  throw createPublicError(chatRes.status || 500, chatErrorMsg || openAiErrorMsg);
-}
-
-async function safeReadJson(res) {
-  try {
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
-function extractOpenAIError(data) {
-  return (
-    data?.error?.message ||
-    data?.message ||
-    data?.error ||
-    null
-  );
-}
-
-function createPublicError(statusCode, message) {
-  const err = new Error(message);
-  err.statusCode = statusCode;
-  err.publicMessage = message;
-  return err;
-}
 function buildHtmlFromData(raw) {
   const content = {
     ...DEFAULT_CONTENT,
