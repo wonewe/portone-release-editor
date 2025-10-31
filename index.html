@@ -436,11 +436,7 @@
                 </tr>
                 <tr>
                   <td style="padding:0 0 16px;" align="center">
-        ${
-          s1Img
-          ? `<img src="https://drive.google.com/thumbnail?id=${esc(s1Img)}&sz=w1000" alt="이미지" height="300px" width="aspect-ratio:1">`
-          : ""
-        }
+        <!-- SLOT:section1 -->
                   </td>
                 </tr>
               </table>
@@ -473,11 +469,7 @@
                 </tr>
                 <tr>
                   <td style="padding:0 0 16px;" align="center">
-        ${
-          s2Img
-          ? `<img src="https://drive.google.com/thumbnail?id=${esc(s2Img)}&sz=w1000" width="600" alt="" style="display:block; width:600px; height:auto; border:0;">`
-          : ""
-        }
+        <!-- SLOT:section2 -->
                   </td>
                 </tr>
               </table>
@@ -510,11 +502,7 @@
                 </tr>
                 <tr>
                   <td style="padding:0 0 16px;" align="center">
-        ${
-          s3Img
-          ? `<img src="https://drive.google.com/thumbnail?id=${esc(s3Img)}&sz=w1000" width="600" alt="" style="display:block; width:600px; height:auto; border:0;">`
-          : ""
-        }
+        <!-- SLOT:section3 -->
                   </td>
                 </tr>
               </table>
@@ -547,11 +535,7 @@
                 </tr>
                 <tr>
                   <td style="padding:0 0 16px;" align="center">
-        ${
-          s4Img
-          ? `<img src="https://drive.google.com/thumbnail?id=${esc(s4Img)}&sz=w1000" width="600" alt="" style="display:block; width:600px; height:auto; border:0;">`
-          : ""
-        }
+        <!-- SLOT:section4 -->
                     </td>
                 </tr>
               </table>
@@ -634,15 +618,51 @@
       <section class="uploader" aria-label="이미지 업로드">
         <h3>이미지 업로드 (Cloudinary)</h3>
         <p style="margin:0 0 12px; font-size:12px; color:#4b5563;">
-          이미지를 드래그 앤 드롭하거나 파일 선택을 누르면 자동으로 업로드되고 URL이 생성됩니다.
+          아래 카드에 이미지를 드롭하거나 파일을 선택하면, 해당 위치의 이미지를 자동으로 교체합니다.
         </p>
-        <div class="drop-zone" id="dropZone">
-          <p style="margin:0; font-size:13px;">이미지 파일을 여기에 드롭하거나 파일 선택을 누르세요.</p>
-          <button type="button" id="filePickerBtn">파일 선택</button>
-          <input type="file" id="filePicker" accept="image/*" hidden>
+        <div class="slot-grid">
+          <div class="slot-card" data-slot="section1">
+            <h4>섹션 1 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section1">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section1">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section1" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section1"></div>
+            <div class="slot-preview" data-slot="section1"></div>
+          </div>
+          <div class="slot-card" data-slot="section2">
+            <h4>섹션 2 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section2">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section2">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section2" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section2"></div>
+            <div class="slot-preview" data-slot="section2"></div>
+          </div>
+          <div class="slot-card" data-slot="section3">
+            <h4>섹션 3 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section3">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section3">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section3" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section3"></div>
+            <div class="slot-preview" data-slot="section3"></div>
+          </div>
+          <div class="slot-card" data-slot="section4">
+            <h4>섹션 4 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section4">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section4">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section4" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section4"></div>
+            <div class="slot-preview" data-slot="section4"></div>
+          </div>
         </div>
         <div class="upload-status" id="uploadStatus"></div>
-        <div class="uploaded-list" id="uploadedList"></div>
       </section>
       <div class="text-editor" id="textEditor"></div>
     </div>
@@ -661,11 +681,55 @@
     const textEditor = document.getElementById('textEditor');
     const loadBtn = document.getElementById('loadBtn');
     const templateButtons = document.querySelectorAll('.template-btn');
-    const dropZone = document.getElementById('dropZone');
-    const filePicker = document.getElementById('filePicker');
-    const filePickerBtn = document.getElementById('filePickerBtn');
     const uploadStatus = document.getElementById('uploadStatus');
-    const uploadedList = document.getElementById('uploadedList');
+
+    const SLOT_CONFIG = {
+      section1: {
+        key: 'section1',
+        label: '섹션 1 이미지 (line 439)',
+        marker: '<!-- SLOT:section1 -->',
+        indent: '        ',
+        template: (url) =>
+          `<img src="${url}" alt="섹션 1 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
+      },
+      section2: {
+        key: 'section2',
+        label: '섹션 2 이미지 (line 476)',
+        marker: '<!-- SLOT:section2 -->',
+        indent: '        ',
+        template: (url) =>
+          `<img src="${url}" alt="섹션 2 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
+      },
+      section3: {
+        key: 'section3',
+        label: '섹션 3 이미지 (line 513)',
+        marker: '<!-- SLOT:section3 -->',
+        indent: '        ',
+        template: (url) =>
+          `<img src="${url}" alt="섹션 3 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
+      },
+      section4: {
+        key: 'section4',
+        label: '섹션 4 이미지 (line 550)',
+        marker: '<!-- SLOT:section4 -->',
+        indent: '        ',
+        template: (url) =>
+          `<img src="${url}" alt="섹션 4 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
+      },
+    };
+
+    const slotElements = Object.fromEntries(
+      Object.keys(SLOT_CONFIG).map((key) => [
+        key,
+        {
+          dropZone: document.querySelector(`.slot-drop[data-slot="${key}"]`),
+          fileInput: document.querySelector(`.slot-file[data-slot="${key}"]`),
+          pickButton: document.querySelector(`.slot-pick[data-slot="${key}"]`),
+          status: document.querySelector(`.slot-status[data-slot="${key}"]`),
+          preview: document.querySelector(`.slot-preview[data-slot="${key}"]`),
+        },
+      ])
+    );
 
     const CLOUDINARY_DEFAULT = {
       cloudName: 'dcam5f9ci',
@@ -757,58 +821,18 @@
 
     function validateCloudinaryConfig() {
       const { cloudName, uploadPreset } = cloudinaryConfig;
-      const placeholders = ['your_cloud_name', 'your_unsigned_preset', ''];
-      if (placeholders.includes(cloudName) || placeholders.includes(uploadPreset)) {
+      if (!cloudName || !uploadPreset || cloudName.startsWith('your_') || uploadPreset.startsWith('your_')) {
         setUploadStatus('Cloudinary 설정이 필요합니다. 코드 상단의 CLOUDINARY_DEFAULT 값을 실제 값으로 바꿔주세요.', true);
         return false;
       }
       return true;
     }
 
-    function createSnippet(url) {
-      return `<img src="${url}" alt="">`;
-    }
-
-    function addUploadedItem({ secure_url: url, original_filename: name, public_id }) {
-      if (!uploadedList || !url) return;
-      const item = document.createElement('div');
-      item.className = 'uploaded-item';
-
-      const img = document.createElement('img');
-      img.src = url;
-      img.alt = name || public_id || 'uploaded image';
-      img.className = 'uploaded-item-preview';
-      item.appendChild(img);
-
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = '이미지 URL 보기';
-      item.appendChild(link);
-
-      const snippet = document.createElement('textarea');
-      snippet.readOnly = true;
-      snippet.value = createSnippet(url);
-      item.appendChild(snippet);
-
-      const actions = document.createElement('div');
-      actions.className = 'uploaded-item-actions';
-
-      const copyUrlBtn = document.createElement('button');
-      copyUrlBtn.type = 'button';
-      copyUrlBtn.textContent = 'URL 복사';
-      copyUrlBtn.addEventListener('click', () => copyToClipboard(url, '이미지 URL이 복사되었습니다.'));
-      actions.appendChild(copyUrlBtn);
-
-      const copyImgBtn = document.createElement('button');
-      copyImgBtn.type = 'button';
-      copyImgBtn.textContent = '<img> 태그 복사';
-      copyImgBtn.addEventListener('click', () => copyToClipboard(snippet.value, '<img> 태그가 복사되었습니다.'));
-      actions.appendChild(copyImgBtn);
-
-      item.appendChild(actions);
-      uploadedList.prepend(item);
+    function setSlotStatus(slotKey, message, isError = false) {
+      const slot = slotElements[slotKey];
+      if (!slot?.status) return;
+      slot.status.textContent = message;
+      slot.status.classList.toggle('error', Boolean(isError));
     }
 
     function copyToClipboard(value, successMessage) {
@@ -821,10 +845,18 @@
         .catch(() => setUploadStatus('클립보드 복사에 실패했습니다.', true));
     }
 
-    async function uploadImage(file) {
-      if (!validateCloudinaryConfig() || !file || isUploading) return;
+    async function uploadImageForSlot(slotKey, file) {
+      const config = SLOT_CONFIG[slotKey];
+      if (!config) return;
+      if (!validateCloudinaryConfig() || !file) return;
+      if (isUploading) {
+        setUploadStatus('다른 업로드 작업이 진행 중입니다. 잠시 후 다시 시도해주세요.', true);
+        return;
+      }
+
       isUploading = true;
-      setUploadStatus(`"${file.name}" 업로드 중...`);
+      setUploadStatus(`[${config.label}] "${file.name}" 업로드 중...`);
+      setSlotStatus(slotKey, '업로드 중...');
 
       const endpoint = `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`;
       const data = new FormData();
@@ -838,27 +870,126 @@
           throw new Error(errorText || `HTTP ${response.status}`);
         }
         const result = await response.json();
-        addUploadedItem(result);
+        applyImageToSlot(slotKey, result.secure_url);
+        updateSlotPreview(slotKey, result.secure_url);
+        setSlotStatus(slotKey, '업로드가 완료되었습니다.');
         setUploadStatus('업로드가 완료되었습니다.');
       } catch (error) {
         console.error('Cloudinary upload failed', error);
+        setSlotStatus(slotKey, '업로드 중 오류가 발생했습니다.', true);
         setUploadStatus('업로드 중 오류가 발생했습니다. 설정을 확인해 주세요.', true);
       } finally {
         isUploading = false;
       }
     }
 
-    async function handleFileList(fileList) {
+    async function handleSlotFiles(slotKey, fileList) {
       if (!fileList || fileList.length === 0) return;
       const files = Array.from(fileList).filter(file => file.type.startsWith('image/'));
       if (files.length === 0) {
+        setSlotStatus(slotKey, '이미지 파일만 업로드할 수 있습니다.', true);
         setUploadStatus('이미지 파일만 업로드할 수 있습니다.', true);
         return;
       }
-      if (!validateCloudinaryConfig()) return;
       for (const file of files) {
-        await uploadImage(file);
+        await uploadImageForSlot(slotKey, file);
       }
+    }
+
+    function applyImageToSlot(slotKey, url) {
+      const config = SLOT_CONFIG[slotKey];
+      if (!config || !htmlInput) return;
+
+      const html = htmlInput.value;
+      const marker = config.marker;
+      const markerIndex = html.indexOf(marker);
+      if (markerIndex === -1) {
+        setSlotStatus(slotKey, '해당 섹션을 찾을 수 없습니다. 템플릿을 확인해주세요.', true);
+        return;
+      }
+
+      const tdSignature = '<td style="padding:0 0 16px;" align="center">';
+      const tdOpenIndex = html.lastIndexOf(tdSignature, markerIndex);
+      if (tdOpenIndex === -1) {
+        setSlotStatus(slotKey, '이미지를 배치할 <td> 영역을 찾을 수 없습니다.', true);
+        return;
+      }
+
+      const contentStart = html.indexOf('>', tdOpenIndex) + 1;
+      const tdCloseIndex = html.indexOf('</td>', contentStart);
+      if (tdCloseIndex === -1) {
+        setSlotStatus(slotKey, '</td> 태그를 찾지 못했습니다.', true);
+        return;
+      }
+
+      const before = html.slice(0, markerIndex);
+      const after = html.slice(tdCloseIndex);
+      const snippet = `${config.indent}${marker}\n${config.indent}${config.template(url)}\n${config.indent}`;
+      htmlInput.value = `${before}${snippet}${after}`;
+
+      loadHtml();
+      setSlotStatus(slotKey, `${config.label}가 업데이트되었습니다.`);
+      setUploadStatus(`${config.label}가 업데이트되었습니다.`);
+    }
+
+    function updateSlotPreview(slotKey, url) {
+      const config = SLOT_CONFIG[slotKey];
+      const elements = slotElements[slotKey];
+      if (!config || !elements?.preview) return;
+      const snippet = config.template(url);
+
+      elements.preview.innerHTML = `
+        <img src="${url}" alt="${config.label}">
+        <div class="uploaded-item-actions">
+          <button type="button" data-action="copy-url">URL 복사</button>
+          <button type="button" data-action="copy-img">&lt;img&gt; 태그 복사</button>
+        </div>
+      `;
+
+      const actionButtons = elements.preview.querySelectorAll('button[data-action]');
+      actionButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          if (button.dataset.action === 'copy-url') {
+            copyToClipboard(url, '이미지 URL이 복사되었습니다.');
+          } else {
+            copyToClipboard(snippet, '<img> 태그가 복사되었습니다.');
+          }
+        });
+      });
+    }
+
+    function refreshSlotPreviewsFromHtml() {
+      const html = htmlInput?.value || '';
+      Object.entries(SLOT_CONFIG).forEach(([slotKey, config]) => {
+        const elements = slotElements[slotKey];
+        if (!elements) return;
+
+        const markerIndex = html.indexOf(config.marker);
+        if (markerIndex === -1) {
+          if (elements.preview) elements.preview.innerHTML = '';
+          setSlotStatus(slotKey, '');
+          return;
+        }
+
+        const tdSignature = '<td style="padding:0 0 16px;" align="center">';
+        const tdOpenIndex = html.lastIndexOf(tdSignature, markerIndex);
+        if (tdOpenIndex === -1) return;
+
+        const contentStart = html.indexOf('>', tdOpenIndex) + 1;
+        const tdCloseIndex = html.indexOf('</td>', contentStart);
+        if (tdCloseIndex === -1) return;
+
+        const contents = html.slice(contentStart, tdCloseIndex);
+        const imgMatch = contents.match(/<img[^>]+src="([^"]+)"[^>]*>/i);
+
+        if (imgMatch) {
+          updateSlotPreview(slotKey, imgMatch[1]);
+          setSlotStatus(slotKey, '현재 이미지가 설정되어 있습니다.');
+        } else {
+          if (elements.preview) elements.preview.innerHTML = '';
+          setSlotStatus(slotKey, '이미지가 비어 있습니다.');
+        }
+      });
     }
 
     function selectTemplate(key) {
@@ -901,6 +1032,7 @@
       });
 
       htmlOutput.value = preview.innerHTML.trim();
+      refreshSlotPreviewsFromHtml();
     }
 
     function traverse(node) {
@@ -917,42 +1049,44 @@
     if (!validateCloudinaryConfig()) {
       // 이미 오류 메시지를 표시했으므로 추가 안내는 생략합니다.
     } else {
-      setUploadStatus('이미지를 업로드하려면 파일을 드롭하거나 선택하세요.');
+      setUploadStatus('각 섹션 카드에 이미지를 드롭하거나 파일을 선택하세요.');
     }
 
-    if (dropZone) {
-      ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          dropZone.classList.add('dragover');
+    Object.entries(slotElements).forEach(([slotKey, elements]) => {
+      if (elements.dropZone) {
+        ['dragenter', 'dragover'].forEach((eventName) => {
+          elements.dropZone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            elements.dropZone.classList.add('dragover');
+          });
         });
-      });
 
-      ['dragleave', 'dragend', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          dropZone.classList.remove('dragover');
+        ['dragleave', 'dragend', 'drop'].forEach((eventName) => {
+          elements.dropZone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            elements.dropZone.classList.remove('dragover');
+          });
         });
-      });
 
-      dropZone.addEventListener('drop', (event) => {
-        handleFileList(event.dataTransfer?.files);
-      });
+        elements.dropZone.addEventListener('drop', (event) => {
+          handleSlotFiles(slotKey, event.dataTransfer?.files);
+        });
 
-      dropZone.addEventListener('click', () => {
-        filePicker?.click();
-      });
-    }
+        elements.dropZone.addEventListener('click', () => {
+          elements.fileInput?.click();
+        });
+      }
 
-    if (filePickerBtn && filePicker) {
-      filePickerBtn.addEventListener('click', () => filePicker.click());
-      filePicker.addEventListener('change', () => {
-        handleFileList(filePicker.files);
-        filePicker.value = '';
-      });
-    }
+      if (elements.pickButton && elements.fileInput) {
+        elements.pickButton.addEventListener('click', () => elements.fileInput.click());
+        elements.fileInput.addEventListener('change', () => {
+          handleSlotFiles(slotKey, elements.fileInput.files);
+          elements.fileInput.value = '';
+        });
+      }
+    });
 
     templateButtons.forEach(btn => {
       btn.addEventListener('click', () => selectTemplate(btn.dataset.template));
