@@ -29,7 +29,7 @@
     main {
       flex: 1;
       display: grid;
-      grid-template-columns: 0.8fr 1fr 1.4fr;
+      grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1fr) minmax(0, 1.4fr);
       gap: 16px;
       padding: 16px;
       overflow: hidden;
@@ -108,6 +108,7 @@
       border: 1px solid #d1d5db;
       border-radius: 12px;
       background: #f9fafb;
+      flex-wrap: wrap;
     }
 
     .template-group-label {
@@ -118,19 +119,20 @@
     }
 
     .template-btn {
-      padding: 8px 14px;
+      padding: clamp(6px, 0.8vw, 12px) clamp(14px, 2vw, 18px);
       background: #f3f4f6;
       color: #1f2937;
       border: 1px solid #d1d5db;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: clamp(12px, 0.5vw + 0.5rem, 15px);
       font-weight: 600;
-      line-height: 1;
-      height: 32px;
+      line-height: 1.2;
+      min-height: 32px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      flex: 1 1 auto;
     }
 
     .template-btn:hover {
@@ -149,12 +151,35 @@
     }
 
     .template-group .template-btn {
-      flex: 0;
+      flex: 1 1 120px;
+      min-width: 110px;
     }
 
     .original-col {
       display: flex;
       flex-direction: column;
+    }
+
+    .original-col.collapsed {
+      padding-bottom: 16px;
+    }
+
+    .original-col.collapsed .original-body {
+      display: none;
+    }
+
+    .original-col.collapsed .col-header {
+      margin-bottom: 0;
+    }
+
+    .original-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    main.original-collapsed {
+      grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.6fr);
     }
 
     .col-header {
@@ -262,14 +287,15 @@
         <h2>1️⃣ 원본 HTML</h2>
         <button type="button" id="toggleHtmlButton" class="collapse-toggle">원본 HTML 접기</button>
       </div>
-      <div class="template-selector" id="templateSelector">
-        <div class="template-group">
-          <span class="template-group-label">이메일</span>
-          <button type="button" class="template-btn active" data-template="release">릴리즈노트</button>
-          <button type="button" class="template-btn" data-template="notice">공지사항</button>
+      <div class="original-body">
+        <div class="template-selector" id="templateSelector">
+          <div class="template-group">
+            <span class="template-group-label">이메일</span>
+            <button type="button" class="template-btn active" data-template="release">릴리즈노트</button>
+            <button type="button" class="template-btn" data-template="notice">공지사항</button>
+          </div>
         </div>
-      </div>
-      <textarea id="htmlInput">
+        <textarea id="htmlInput">
 <html lang="ko">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -581,11 +607,12 @@
   <!-- /wrapper -->
 </body>
 </html>`;
-      </textarea>
-      <button id="loadBtn">HTML 불러오기</button>
+        </textarea>
+        <button id="loadBtn">HTML 불러오기</button>
 
-      <h2 style="margin-top: 24px;">4️⃣ 수정된 HTML</h2>
-      <textarea id="htmlOutput" readonly></textarea>
+        <h2 style="margin-top: 24px;">4️⃣ 수정된 HTML</h2>
+        <textarea id="htmlOutput" readonly></textarea>
+      </div>
     </div>
 
     <!-- 2️⃣ 텍스트 편집 -->
@@ -610,6 +637,7 @@
     const templateButtons = document.querySelectorAll('.template-btn');
     const originalCol = document.querySelector('.original-col');
     const toggleButton = document.getElementById('toggleHtmlButton');
+    const mainLayout = document.querySelector('main');
 
     const releaseTemplate = htmlInput.value.trim();
     const noticeTemplate = `
@@ -693,8 +721,12 @@
       if (originalCol) {
         originalCol.classList.toggle('collapsed', isHtmlCollapsed);
       }
+      if (mainLayout) {
+        mainLayout.classList.toggle('original-collapsed', isHtmlCollapsed);
+      }
       if (toggleButton) {
         toggleButton.textContent = isHtmlCollapsed ? '원본 HTML 펼치기' : '원본 HTML 접기';
+        toggleButton.setAttribute('aria-expanded', String(!isHtmlCollapsed));
       }
     }
 
@@ -759,6 +791,7 @@
 
     loadBtn.addEventListener('click', loadHtml);
     if (toggleButton) {
+      toggleButton.setAttribute('aria-expanded', 'true');
       toggleButton.addEventListener('click', toggleHtmlPanel);
     }
     selectTemplate('release');
