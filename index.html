@@ -33,6 +33,7 @@
       gap: 16px;
       padding: 16px;
       overflow: hidden;
+      min-height: 0;
     }
 
     .col {
@@ -43,6 +44,13 @@
       flex-direction: column;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
       overflow: hidden;
+      min-height: 0;
+    }
+
+    .col.col-scroll {
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 0;
     }
 
     h2 {
@@ -189,6 +197,44 @@
       color: #1f2937;
     }
 
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .slot-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .slot-card h4 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .slot-status {
+      font-size: 12px;
+      color: #4b5563;
+      min-height: 18px;
+    }
+
+    .slot-status.error {
+      color: #dc2626;
+    }
+
     .drop-zone {
       position: relative;
       border: 2px dashed #d1d5db;
@@ -303,7 +349,7 @@
 
   <main>
     <!-- 1️⃣ HTML 입력 -->
-    <div class="col">
+    <div class="col col-scroll">
       <h2>1️⃣ 원본 HTML</h2>
       <div class="template-selector" id="templateSelector">
         <button type="button" class="template-btn active" data-template="release">1️⃣ 릴리즈노트</button>
@@ -613,7 +659,7 @@
     </div>
 
     <!-- 2️⃣ 텍스트 편집 -->
-    <div class="col">
+    <div class="col col-scroll">
       <h2>2️⃣ 텍스트 편집</h2>
       <section class="uploader" aria-label="이미지 업로드">
         <h3>이미지 업로드 (Cloudinary)</h3>
@@ -629,7 +675,6 @@
               <input type="file" class="slot-file" data-slot="section1" accept="image/*" hidden>
             </div>
             <div class="slot-status" data-slot="section1"></div>
-            <div class="slot-preview" data-slot="section1"></div>
           </div>
           <div class="slot-card" data-slot="section2">
             <h4>섹션 2 이미지</h4>
@@ -639,7 +684,6 @@
               <input type="file" class="slot-file" data-slot="section2" accept="image/*" hidden>
             </div>
             <div class="slot-status" data-slot="section2"></div>
-            <div class="slot-preview" data-slot="section2"></div>
           </div>
           <div class="slot-card" data-slot="section3">
             <h4>섹션 3 이미지</h4>
@@ -649,7 +693,6 @@
               <input type="file" class="slot-file" data-slot="section3" accept="image/*" hidden>
             </div>
             <div class="slot-status" data-slot="section3"></div>
-            <div class="slot-preview" data-slot="section3"></div>
           </div>
           <div class="slot-card" data-slot="section4">
             <h4>섹션 4 이미지</h4>
@@ -659,7 +702,6 @@
               <input type="file" class="slot-file" data-slot="section4" accept="image/*" hidden>
             </div>
             <div class="slot-status" data-slot="section4"></div>
-            <div class="slot-preview" data-slot="section4"></div>
           </div>
         </div>
         <div class="upload-status" id="uploadStatus"></div>
