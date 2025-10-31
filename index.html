@@ -29,7 +29,7 @@
     main {
       flex: 1;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 0.8fr 1fr 1.4fr;
       gap: 16px;
       padding: 16px;
       overflow: hidden;
@@ -92,6 +92,60 @@
       transform: translateY(-1px);
     }
 
+    .template-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: stretch;
+    }
+
+    .template-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      background: #f9fafb;
+    }
+
+    .template-group-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4b5563;
+      white-space: nowrap;
+    }
+
+    .template-btn {
+      flex: 1;
+      margin-top: 0;
+      background: #e5e7eb;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      transform: none;
+      border-radius: 10px;
+    }
+
+    .template-btn:hover {
+      background: #d1d5db;
+      transform: none;
+    }
+
+    .template-btn.active {
+      background: #2873ff;
+      color: #ffffff;
+      border-color: #2873ff;
+    }
+
+    .template-btn.active:hover {
+      background: #1e64e0;
+    }
+
+    .template-group .template-btn {
+      flex: 0;
+    }
+
     .text-editor {
       flex: 1;
       overflow-y: auto;
@@ -152,6 +206,13 @@
     <!-- 1️⃣ HTML 입력 -->
     <div class="col">
       <h2>1️⃣ 원본 HTML</h2>
+      <div class="template-selector" id="templateSelector">
+        <div class="template-group">
+          <span class="template-group-label">이메일</span>
+          <button type="button" class="template-btn active" data-template="release">릴리즈노트</button>
+          <button type="button" class="template-btn" data-template="notice">공지사항</button>
+        </div>
+      </div>
       <textarea id="htmlInput">
 <html lang="ko">
 <head>
@@ -490,14 +551,101 @@
     const preview = document.getElementById('preview');
     const textEditor = document.getElementById('textEditor');
     const loadBtn = document.getElementById('loadBtn');
+    const templateButtons = document.querySelectorAll('.template-btn');
+
+    const releaseTemplate = htmlInput.value.trim();
+    const noticeTemplate = `
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PortOne 공지사항</title>
+</head>
+<body style="margin:0; padding:0; width:100%; background:#f3f4f6;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0;">
+    <tr>
+      <td align="center" style="padding:24px;">
+        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="width:600px; background:#ffffff; border-radius:16px; overflow:hidden; font-family:Pretendard, Tahoma, Arial, sans-serif;">
+          <tr>
+            <td style="padding:32px 32px 24px;">
+              <p style="margin:0; font-size:14px; line-height:20px; color:#6b7280;">PortOne 공지</p>
+              <h1 style="margin:8px 0 16px; font-size:28px; line-height:34px; color:#111827;">서비스 공지 제목을 입력하세요</h1>
+              <p style="margin:0; font-size:16px; line-height:26px; color:#374151;">
+                안녕하세요, 포트원입니다. 여기에 공지사항의 주요 내용을 작성해 주세요. 변경되는 내용, 일정, 영향 범위 등 필요한 정보를 자유롭게 기입할 수 있습니다.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 24px;">
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #e5e7eb; border-radius:12px;">
+                <tr>
+                  <td style="padding:20px;">
+                    <h2 style="margin:0 0 12px; font-size:20px; line-height:26px; color:#2873ff;">주요 안내</h2>
+                    <p style="margin:0; font-size:16px; line-height:24px; color:#1f2937;">
+                      - 일정: 2025년 2월 10일(월) 00:00 ~ 02:00<br>
+                      - 영향 범위: 결제 승인 및 정산 조회 기능 일시 중단<br>
+                      - 문의: support@portone.io
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 32px;">
+              <p style="margin:0 0 16px; font-size:16px; line-height:24px; color:#374151;">
+                더 자세한 내용은 아래 버튼을 눌러 확인해주세요.
+              </p>
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" style="background:#2873ff; border-radius:999px;">
+                    <a href="https://portone.io" target="_blank" rel="noopener" style="display:inline-block; padding:12px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none;">
+                      자세히 보기
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#f9fafb; padding:24px 32px; color:#6b7280; font-size:12px; line-height:18px;">
+              본 메일은 포트원 서비스 안내를 위해 발송되었습니다. 문의가 필요하시면 cs@portone.io 로 연락 주세요.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`.trim();
+
+    const templates = {
+      release: releaseTemplate,
+      notice: noticeTemplate,
+    };
 
     let textNodes = [];
+    let currentTemplateKey = 'release';
+
+    function selectTemplate(key) {
+      const template = templates[key];
+      if (!template) return;
+      templates[currentTemplateKey] = htmlInput.value.trim();
+      currentTemplateKey = key;
+      htmlInput.value = template;
+      templateButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.template === key);
+      });
+      loadHtml();
+    }
 
     function loadHtml() {
       const html = htmlInput.value;
-      preview.innerHTML = html;
       textEditor.innerHTML = '';
       textNodes = [];
+      preview.innerHTML = html;
       traverse(preview);
 
       textNodes.forEach((item, idx) => {
@@ -536,8 +684,12 @@
       });
     }
 
+    templateButtons.forEach(btn => {
+      btn.addEventListener('click', () => selectTemplate(btn.dataset.template));
+    });
+
     loadBtn.addEventListener('click', loadHtml);
-    loadHtml();
+    selectTemplate('release');
   </script>
 </body>
 </html>
