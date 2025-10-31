@@ -134,6 +134,7 @@
       flex: 1;
       overflow-y: auto;
       padding-right: 4px;
+      margin-top: 12px;
     }
 
     .text-item {
@@ -284,64 +285,82 @@
       color: #dc2626;
     }
 
-    .uploaded-list {
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .uploaded-item {
-      padding: 10px;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .uploaded-item-preview {
-      max-height: 120px;
-      object-fit: contain;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-    }
-
-    .uploaded-item textarea {
-      font-size: 12px;
-      min-height: 48px;
-      resize: none;
-    }
-
-    .uploaded-item-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .uploaded-item-actions button {
-      padding: 6px 12px;
+    .ai-generator {
+      margin-bottom: 16px;
+      padding: 14px;
       background: #eef2ff;
-      color: #1e3a8a;
       border: 1px solid #c7d2fe;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .uploaded-item-actions button:hover {
-      background: #dbeafe;
+    .ai-generator h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
       color: #1d4ed8;
     }
 
-    .uploaded-item a {
-      color: #2873ff;
-      font-size: 12px;
-      word-break: break-all;
+    .ai-brief {
+      width: 100%;
+      min-height: 120px;
+      border: 1px solid #c7d2fe;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: vertical;
+      background: #f8fafc;
+      color: #1f2937;
     }
+
+    .ai-brief:focus {
+      outline: 2px solid #3b82f6;
+      background: #ffffff;
+    }
+
+    .ai-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .ai-actions button {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
+      transition: background 0.15s ease;
+    }
+
+    .ai-actions button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .ai-actions button:hover:not(:disabled) {
+      background: #1d4ed8;
+    }
+
+    .ai-status {
+      margin: 0;
+      font-size: 12px;
+      color: #1f2937;
+      min-height: 16px;
+    }
+
+    .ai-status.error {
+      color: #dc2626;
+    }
+
   </style>
 </head>
 <body>
@@ -712,6 +731,14 @@
     <!-- 3️⃣ 미리보기 -->
     <div class="col">
       <h2>3️⃣ 미리보기</h2>
+      <section class="ai-generator" aria-label="AI 자동 작성">
+        <h3>AI 자동 작성</h3>
+        <textarea id="aiBrief" class="ai-brief" placeholder="기획서나 요구사항을 붙여넣으면 AI가 릴리즈노트 초안을 작성합니다."></textarea>
+        <div class="ai-actions">
+          <button type="button" id="aiGenerateBtn">AI 작성</button>
+        </div>
+        <p class="ai-status" id="aiStatus"></p>
+      </section>
       <div id="preview" class="preview"></div>
     </div>
   </main>
@@ -724,6 +751,9 @@
     const loadBtn = document.getElementById('loadBtn');
     const templateButtons = document.querySelectorAll('.template-btn');
     const uploadStatus = document.getElementById('uploadStatus');
+    const aiBrief = document.getElementById('aiBrief');
+    const aiGenerateBtn = document.getElementById('aiGenerateBtn');
+    const aiStatus = document.getElementById('aiStatus');
 
     const SLOT_CONFIG = {
       section1: {
@@ -768,7 +798,6 @@
           fileInput: document.querySelector(`.slot-file[data-slot="${key}"]`),
           pickButton: document.querySelector(`.slot-pick[data-slot="${key}"]`),
           status: document.querySelector(`.slot-status[data-slot="${key}"]`),
-          preview: document.querySelector(`.slot-preview[data-slot="${key}"]`),
         },
       ])
     );
@@ -854,6 +883,7 @@
 
     let textNodes = [];
     let isUploading = false;
+    let aiAbortController = null;
 
     function setUploadStatus(message, isError = false) {
       if (!uploadStatus) return;
@@ -935,6 +965,69 @@
       }
       for (const file of files) {
         await uploadImageForSlot(slotKey, file);
+      }
+    }
+
+    async function generateReleaseNoteWithAI() {
+      if (!aiBrief) return;
+      const brief = aiBrief.value.trim();
+      if (!brief) {
+        if (aiStatus) {
+          aiStatus.textContent = '기획서나 요구사항을 먼저 입력해주세요.';
+          aiStatus.classList.add('error');
+        }
+        return;
+      }
+
+      if (aiStatus) {
+        aiStatus.textContent = 'AI가 초안을 작성 중입니다...';
+        aiStatus.classList.remove('error');
+      }
+      if (aiGenerateBtn) aiGenerateBtn.disabled = true;
+
+      aiAbortController?.abort();
+      aiAbortController = new AbortController();
+
+      try {
+        const response = await fetch('/.netlify/functions/generateReleaseNote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ brief }),
+          signal: aiAbortController.signal,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(errorText || `HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+        if (result?.html) {
+          htmlInput.value = result.html;
+          loadHtml();
+          if (aiStatus) {
+            aiStatus.textContent = 'AI 초안이 적용되었습니다. 필요에 따라 수정하세요.';
+            aiStatus.classList.remove('error');
+          }
+        } else {
+          throw new Error('AI 응답을 해석하지 못했습니다.');
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          if (aiStatus) {
+            aiStatus.textContent = 'AI 요청이 취소되었습니다.';
+            aiStatus.classList.add('error');
+          }
+        } else {
+          console.error('AI generation failed:', error);
+          if (aiStatus) {
+            aiStatus.textContent = `AI 작성 중 오류가 발생했습니다. ${error.message || ''}`.trim();
+            aiStatus.classList.add('error');
+          }
+        }
+      } finally {
+        if (aiGenerateBtn) aiGenerateBtn.disabled = false;
+        aiAbortController = null;
       }
     }
 
@@ -1135,6 +1228,9 @@
     });
 
     loadBtn.addEventListener('click', loadHtml);
+    if (aiGenerateBtn) {
+      aiGenerateBtn.addEventListener('click', generateReleaseNoteWithAI);
+    }
     selectTemplate('release');
   </script>
 </body>
