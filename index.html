@@ -29,7 +29,7 @@
     main {
       flex: 1;
       display: grid;
-      grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1fr) minmax(0, 1.4fr);
+      grid-template-columns: 0.8fr 1fr 1.4fr;
       gap: 16px;
       padding: 16px;
       overflow: hidden;
@@ -94,49 +94,21 @@
 
     .template-selector {
       display: flex;
-      flex-wrap: wrap;
       gap: 8px;
       margin-bottom: 12px;
-      align-items: stretch;
-    }
-
-    .template-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      background: #f9fafb;
-      flex-wrap: wrap;
-    }
-
-    .template-group-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #4b5563;
-      white-space: nowrap;
     }
 
     .template-btn {
-      padding: clamp(6px, 0.8vw, 12px) clamp(14px, 2vw, 18px);
-      background: #f3f4f6;
-      color: #1f2937;
+      flex: 1;
+      margin-top: 0;
+      background: #e5e7eb;
+      color: #374151;
       border: 1px solid #d1d5db;
-      border-radius: 999px;
-      font-size: clamp(12px, 0.5vw + 0.5rem, 15px);
-      font-weight: 600;
-      line-height: 1.2;
-      min-height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      flex: 1 1 auto;
+      transform: none;
     }
 
     .template-btn:hover {
-      background: #e5e7eb;
+      background: #d1d5db;
       transform: none;
     }
 
@@ -148,80 +120,6 @@
 
     .template-btn.active:hover {
       background: #1e64e0;
-    }
-
-    .template-group .template-btn {
-      flex: 1 1 120px;
-      min-width: 110px;
-    }
-
-    .original-col {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .original-col.collapsed {
-      padding-bottom: 16px;
-    }
-
-    .original-col.collapsed .original-body {
-      display: none;
-    }
-
-    .original-col.collapsed .col-header {
-      margin-bottom: 0;
-    }
-
-    .original-body {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    main.original-collapsed {
-      grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.6fr);
-    }
-
-    .col-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .col-header h2 {
-      margin: 0;
-    }
-
-    .collapse-toggle {
-      margin: 0;
-      padding: 6px 12px;
-      background: #f3f4f6;
-      color: #1f2937;
-      border: 1px solid #d1d5db;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-      line-height: 1;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.15s ease, color 0.15s ease;
-      transform: none;
-    }
-
-    .collapse-toggle:hover {
-      background: #e5e7eb;
-      color: #1e40af;
-      transform: none;
-    }
-
-    .original-col.collapsed #htmlInput,
-    .original-col.collapsed #loadBtn,
-    .original-col.collapsed .template-selector {
-      display: none;
     }
 
     .text-editor {
@@ -282,20 +180,13 @@
 
   <main>
     <!-- 1️⃣ HTML 입력 -->
-    <div class="col original-col">
-      <div class="col-header">
-        <h2>1️⃣ 원본 HTML</h2>
-        <button type="button" id="toggleHtmlButton" class="collapse-toggle">원본 HTML 접기</button>
+    <div class="col">
+      <h2>1️⃣ 원본 HTML</h2>
+      <div class="template-selector" id="templateSelector">
+        <button type="button" class="template-btn active" data-template="release">1️⃣ 릴리즈노트</button>
+        <button type="button" class="template-btn" data-template="notice">2️⃣ 공지사항</button>
       </div>
-      <div class="original-body">
-        <div class="template-selector" id="templateSelector">
-          <div class="template-group">
-            <span class="template-group-label">이메일</span>
-            <button type="button" class="template-btn active" data-template="release">릴리즈노트</button>
-            <button type="button" class="template-btn" data-template="notice">공지사항</button>
-          </div>
-        </div>
-        <textarea id="htmlInput">
+      <textarea id="htmlInput">
 <html lang="ko">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -322,18 +213,18 @@
                 <tr>
                   <td align="left" style="padding:16px 26px;">
                     <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">
-                      <span style="color:#2873ff;">${esc(d.hero_date)}</span> 반가운 포트원 소식
+                      <span style="color:#2873ff;">날짜를 입력하세요</span> 반가운 포트원 소식
                     </p>
                   </td>
                 </tr>
                 <tr>
                   <td align="left" style="padding:16px 26px 6px;">
-                    <h3 style="margin:0; font-size:24px; line-height:28px; font-weight:700; color:#111827;">${esc(d.hero_title)}</h3>
+                    <h3 style="margin:0; font-size:24px; line-height:28px; font-weight:700; color:#111827;">제목을 입력하세요</h3>
                   </td>
                 </tr>
                 <tr>
                   <td align="left" style="padding:6px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827; font-weight:400;">${esc(d.hero_intro)}</p>
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827; font-weight:400;">내용을 입력하세요</p>
                   </td>
                 </tr>
               </table>
@@ -346,8 +237,8 @@
                       <tr>
                         <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
                           <div style="font-size:24px; line-height:32px; color:#2873ff;">➊</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">${esc(d.card1_title)}</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">${esc(d.card1_desc)}</p>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 1 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 1 내용</p>
                         </td>
                       </tr>
                     </table>
@@ -357,8 +248,8 @@
                       <tr>
                         <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
                           <div style="font-size:24px; line-height:32px; color:#2873ff;">➋</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">${esc(d.card2_title)}</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">${esc(d.card2_desc)}</p>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 2 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 2 내용</p>
                         </td>
                       </tr>
                     </table>
@@ -374,8 +265,8 @@
                       <tr>
                         <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
                           <div style="font-size:24px; line-height:32px; color:#2873ff;">➌</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">${esc(d.card3_title)}</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">${esc(d.card3_desc)}</p>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 3 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 3 내용</p>
                         </td>
                       </tr>
                     </table>
@@ -385,8 +276,8 @@
                       <tr>
                         <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
                           <div style="font-size:24px; line-height:32px; color:#2873ff;">➍</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">${esc(d.card4_title)}</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">${esc(d.card4_desc)}</p>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 4 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 4 내용</p>
                         </td>
                       </tr>
                     </table>
@@ -407,17 +298,17 @@
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td style="padding:16px 26px 6px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">${esc(d.section1_label)}</p>
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 1 요약</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">${esc(d.section1_title)}</p>
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 1 제목</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">${esc(d.section1_body)}</p>
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 1 내용</p>
                   </td>
                 </tr>
                 <tr>
@@ -444,17 +335,17 @@
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td style="padding:16px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">${esc(d.section2_label)}</p>
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 2 요약</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">${esc(d.section2_title)}</p>
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 2 제목</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">${esc(d.section2_body)}</p>
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 2 내용</p>
                   </td>
                 </tr>
                 <tr>
@@ -481,17 +372,17 @@
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td style="padding:16px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">${esc(d.section3_label)}</p>
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 3 요약</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">${esc(d.section3_title)}</p>
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 3 제목</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">${esc(d.section3_body)}</p>
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 3 내용</p>
                   </td>
                 </tr>
                 <tr>
@@ -518,17 +409,17 @@
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td style="padding:16px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">${esc(d.section4_label)}</p>
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 4 요약</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">${esc(d.section4_title)}</p>
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 4 제목</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">${esc(d.section4_body)}</p>
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 4 내용</p>
                   </td>
                 </tr>
                 <tr>
@@ -578,7 +469,7 @@
                 <tr>
                   <td align="left" style="padding:16px 26px 24px;">
                     <p style="margin:0; font-size:12px; line-height:17px; color:#4b5563;">
-                      작성일자: ${esc(d.footer_date)}<br>
+                      작성일자: 작성일자를 입력하세요<br>
                       일반 문의: <a href="mailto:cs@portone.io" target="_blank" rel="noopener" style="color:#4b5563; text-decoration:underline; font-weight:600;">cs@portone.io</a> 또는 <span style="font-weight:600;">채널톡</span><br>
                       기술지원 문의: <a href="mailto:support.b2b@portone.io" target="_blank" rel="noopener" style="color:#4b5563; text-decoration:underline; font-weight:600;">support.b2b@portone.io</a> 또는 파트너스 슬랙 채널<br><br>
                       서울특별시 성동구 성수이로20길 16 제이케이타워 4층<br>
@@ -606,13 +497,12 @@
   </table>
   <!-- /wrapper -->
 </body>
-</html>`;
-        </textarea>
-        <button id="loadBtn">HTML 불러오기</button>
+</html>
+      </textarea>
+      <button id="loadBtn">HTML 불러오기</button>
 
-        <h2 style="margin-top: 24px;">4️⃣ 수정된 HTML</h2>
-        <textarea id="htmlOutput" readonly></textarea>
-      </div>
+      <h2 style="margin-top: 24px;">4️⃣ 수정된 HTML</h2>
+      <textarea id="htmlOutput" readonly></textarea>
     </div>
 
     <!-- 2️⃣ 텍스트 편집 -->
@@ -635,9 +525,6 @@
     const textEditor = document.getElementById('textEditor');
     const loadBtn = document.getElementById('loadBtn');
     const templateButtons = document.querySelectorAll('.template-btn');
-    const originalCol = document.querySelector('.original-col');
-    const toggleButton = document.getElementById('toggleHtmlButton');
-    const mainLayout = document.querySelector('main');
 
     const releaseTemplate = htmlInput.value.trim();
     const noticeTemplate = `
@@ -713,28 +600,10 @@
     };
 
     let textNodes = [];
-    let currentTemplateKey = 'release';
-    let isHtmlCollapsed = false;
-
-    function toggleHtmlPanel() {
-      isHtmlCollapsed = !isHtmlCollapsed;
-      if (originalCol) {
-        originalCol.classList.toggle('collapsed', isHtmlCollapsed);
-      }
-      if (mainLayout) {
-        mainLayout.classList.toggle('original-collapsed', isHtmlCollapsed);
-      }
-      if (toggleButton) {
-        toggleButton.textContent = isHtmlCollapsed ? '원본 HTML 펼치기' : '원본 HTML 접기';
-        toggleButton.setAttribute('aria-expanded', String(!isHtmlCollapsed));
-      }
-    }
 
     function selectTemplate(key) {
       const template = templates[key];
       if (!template) return;
-      templates[currentTemplateKey] = htmlInput.value.trim();
-      currentTemplateKey = key;
       htmlInput.value = template;
       templateButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.template === key);
@@ -744,9 +613,9 @@
 
     function loadHtml() {
       const html = htmlInput.value;
+      preview.innerHTML = html;
       textEditor.innerHTML = '';
       textNodes = [];
-      preview.innerHTML = html;
       traverse(preview);
 
       textNodes.forEach((item, idx) => {
@@ -790,10 +659,6 @@
     });
 
     loadBtn.addEventListener('click', loadHtml);
-    if (toggleButton) {
-      toggleButton.setAttribute('aria-expanded', 'true');
-      toggleButton.addEventListener('click', toggleHtmlPanel);
-    }
     selectTemplate('release');
   </script>
 </body>
