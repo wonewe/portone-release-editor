@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>PortOne 릴리즈노트 편집기</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { 
+      margin: 0; 
+      font-family: "Pretendard", "Noto Sans KR", sans-serif; 
+      background: #f3f4f6;
+      color: #111827;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* 상단 헤더 */
+    header {
+      background: #2873ff;
+      color: white;
+      padding: 16px 24px;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .col {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin: 0 0 12px;
+      font-weight: 600;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      font-family: "Pretendard", monospace;
+      font-size: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 10px;
+      line-height: 1.5;
+      resize: vertical;
+      min-height: 150px;
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    textarea:focus {
+      outline: 2px solid #2873ff;
+      background: white;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 10px 16px;
+      background: #2873ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    button:hover {
+      background: #1e64e0;
+      transform: translateY(-1px);
+    }
+
+    .text-editor {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .text-item {
+      margin-bottom: 16px;
+    }
+
+    .text-item label {
+      display: block;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .text-item textarea {
+      width: 100%;
+      min-height: 40px;
+      font-size: 14px;
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      resize: vertical;
+      line-height: 1.5;
+      background: #f9fafb;
+    }
+
+    .text-item textarea:focus {
+      background: #fff;
+      outline: 2px solid #2873ff;
+    }
+
+    .preview {
+      flex: 1;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: white;
+      padding: 12px;
+      overflow-y: auto;
+      box-shadow: inset 0 0 0 1px #f3f4f6;
+    }
+
+    #htmlOutput {
+      background: #f9fafb;
+      color: #1f2937;
+      height: 180px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <header>📢 PortOne 릴리즈노트 편집기</header>
+
+  <main>
+    <!-- 1️⃣ HTML 입력 -->
+    <div class="col">
+      <h2>1️⃣ 원본 HTML</h2>
+      <textarea id="htmlInput">
+<html lang="ko">
+<head><title>PortOne 업데이트</title></head>
+<body><h2>6월 정산 기능 업데이트</h2><p>이번 버전에서는 자동화된 세금계산서 발행 요청서 기능이 추가되었습니다.</p></body>
+</html>
+      </textarea>
+      <button id="loadBtn">HTML 불러오기</button>
+
+      <h2 style="margin-top: 24px;">4️⃣ 수정된 HTML</h2>
+      <textarea id="htmlOutput" readonly></textarea>
+    </div>
+
+    <!-- 2️⃣ 텍스트 편집 -->
+    <div class="col">
+      <h2>2️⃣ 텍스트 편집</h2>
+      <div class="text-editor" id="textEditor"></div>
+    </div>
+
+    <!-- 3️⃣ 미리보기 -->
+    <div class="col">
+      <h2>3️⃣ 미리보기</h2>
+      <div id="preview" class="preview"></div>
+    </div>
+  </main>
+
+  <script>
+    const htmlInput = document.getElementById('htmlInput');
+    const htmlOutput = document.getElementById('htmlOutput');
+    const preview = document.getElementById('preview');
+    const textEditor = document.getElementById('textEditor');
+    const loadBtn = document.getElementById('loadBtn');
+
+    let textNodes = [];
+
+    function loadHtml() {
+      const html = htmlInput.value;
+      preview.innerHTML = html;
+      textEditor.innerHTML = '';
+      textNodes = [];
+      traverse(preview);
+
+      textNodes.forEach((item, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'text-item';
+
+        const label = document.createElement('label');
+        label.textContent = `텍스트 ${idx + 1}`;
+        wrap.appendChild(label);
+
+        const textarea = document.createElement('textarea');
+        textarea.value = item.node.nodeValue.trim();
+        textarea.addEventListener('input', (e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = `${e.target.scrollHeight}px`;
+          item.node.nodeValue = e.target.value;
+          htmlOutput.value = preview.innerHTML.trim();
+        });
+        textarea.style.height = `${textarea.scrollHeight}px`;
+        wrap.appendChild(textarea);
+
+        textEditor.appendChild(wrap);
+      });
+
+      htmlOutput.value = preview.innerHTML.trim();
+    }
+
+    function traverse(node) {
+      node.childNodes.forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const text = child.nodeValue.trim();
+          if (text.length > 0) textNodes.push({ node: child });
+        } else {
+          traverse(child);
+        }
+      });
+    }
+
+    loadBtn.addEventListener('click', loadHtml);
+    loadHtml();
+  </script>
+</body>
+</html>
