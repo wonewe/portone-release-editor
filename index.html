@@ -118,17 +118,23 @@
     }
 
     .template-btn {
-      flex: 1;
-      margin-top: 0;
-      background: #e5e7eb;
-      color: #374151;
+      padding: 8px 14px;
+      background: #f3f4f6;
+      color: #1f2937;
       border: 1px solid #d1d5db;
-      transform: none;
-      border-radius: 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .template-btn:hover {
-      background: #d1d5db;
+      background: #e5e7eb;
       transform: none;
     }
 
@@ -144,6 +150,53 @@
 
     .template-group .template-btn {
       flex: 0;
+    }
+
+    .original-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .col-header h2 {
+      margin: 0;
+    }
+
+    .collapse-toggle {
+      margin: 0;
+      padding: 6px 12px;
+      background: #f3f4f6;
+      color: #1f2937;
+      border: 1px solid #d1d5db;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease, color 0.15s ease;
+      transform: none;
+    }
+
+    .collapse-toggle:hover {
+      background: #e5e7eb;
+      color: #1e40af;
+      transform: none;
+    }
+
+    .original-col.collapsed #htmlInput,
+    .original-col.collapsed #loadBtn,
+    .original-col.collapsed .template-selector {
+      display: none;
     }
 
     .text-editor {
@@ -204,8 +257,11 @@
 
   <main>
     <!-- 1️⃣ HTML 입력 -->
-    <div class="col">
-      <h2>1️⃣ 원본 HTML</h2>
+    <div class="col original-col">
+      <div class="col-header">
+        <h2>1️⃣ 원본 HTML</h2>
+        <button type="button" id="toggleHtmlButton" class="collapse-toggle">원본 HTML 접기</button>
+      </div>
       <div class="template-selector" id="templateSelector">
         <div class="template-group">
           <span class="template-group-label">이메일</span>
@@ -552,6 +608,8 @@
     const textEditor = document.getElementById('textEditor');
     const loadBtn = document.getElementById('loadBtn');
     const templateButtons = document.querySelectorAll('.template-btn');
+    const originalCol = document.querySelector('.original-col');
+    const toggleButton = document.getElementById('toggleHtmlButton');
 
     const releaseTemplate = htmlInput.value.trim();
     const noticeTemplate = `
@@ -628,6 +686,17 @@
 
     let textNodes = [];
     let currentTemplateKey = 'release';
+    let isHtmlCollapsed = false;
+
+    function toggleHtmlPanel() {
+      isHtmlCollapsed = !isHtmlCollapsed;
+      if (originalCol) {
+        originalCol.classList.toggle('collapsed', isHtmlCollapsed);
+      }
+      if (toggleButton) {
+        toggleButton.textContent = isHtmlCollapsed ? '원본 HTML 펼치기' : '원본 HTML 접기';
+      }
+    }
 
     function selectTemplate(key) {
       const template = templates[key];
@@ -689,6 +758,9 @@
     });
 
     loadBtn.addEventListener('click', loadHtml);
+    if (toggleButton) {
+      toggleButton.addEventListener('click', toggleHtmlPanel);
+    }
     selectTemplate('release');
   </script>
 </body>
