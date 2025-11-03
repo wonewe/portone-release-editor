@@ -408,10 +408,10 @@ function buildHtmlFromData(raw, brief) {
 
   const cardCells = cardsInput.map((card, index) => `
                   <td width="50%" valign="top" style="${index % 2 === 0 ? 'padding-right:8px;' : 'padding-left:8px;'}">
-                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#f5f8ff;">
+                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#fff4ec;">
                       <tr>
                         <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
-                          <div style="font-size:24px; line-height:32px; color:#2873ff;">${['➊','➋','➌','➍'][index] || '•'}</div>
+                          <div style="font-size:24px; line-height:32px; color:#FC6B2D;">${['➊','➋','➌','➍'][index] || '•'}</div>
                           <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">${escapeHtml(card.title)}</p>
                           <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">${escapeHtml(card.summary)}</p>
                         </td>
@@ -429,12 +429,16 @@ function buildHtmlFromData(raw, brief) {
   const sectionBlocks = sectionsInput
     .map((section, index) => {
       const slotComment = `<!-- SLOT:section${index + 1} -->`;
+      const card = cardsInput[index] || {};
+      const hasCardContent = Boolean(card.title || card.summary);
+      const hasSectionContent = Boolean(section.label || section.title || section.body);
+      if (!hasCardContent && !hasSectionContent) return '';
       return `
               <!-- 섹션 ${index + 1} -->
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td style="padding:16px 26px 6px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">${escapeHtml(section.label)}</p>
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#FC6B2D;">${escapeHtml(section.label)}</p>
                   </td>
                 </tr>
                 <tr>
@@ -486,13 +490,13 @@ function buildHtmlFromData(raw, brief) {
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center" style="padding:0 0 16px 0;">
-                    <img src="https://share1.cloudhq-mkt3.net/1189373c84d5d6.png" width="600" height="200" alt="" style="display:block; width:600px; height:auto; border:0; outline:none; text-decoration:none;">
+                    <img src="https://res.cloudinary.com/dcam5f9ci/image/upload/v1762151305/y5fbvip7z7divgu4nbcp.png" width="600" height="200" alt="" style="display:block; width:600px; height:auto; border:0; outline:none; text-decoration:none;">
                   </td>
                 </tr>
                 <tr>
                   <td align="left" style="padding:16px 26px;">
                     <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">
-                      <span style="color:#2873ff;">${heroDate}</span> 반가운 포트원 소식
+                      <span style="color:#FC6B2D;">${heroDate}</span> 반가운 포트원 소식
                     </p>
                   </td>
                 </tr>

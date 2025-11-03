@@ -1,1303 +1,373 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>PortOne 고객 지원 문서 편집기</title>
+  <meta charset="UTF-8">
+  <title>PortOne 문서 선택</title>
   <style>
     :root {
-      --brand: #2873ff;
-      --brand-600: #1e64e0;
+      --brand: #FC6B2D;
+      --brand-dark: #d75520;
       --bg: #f3f4f6;
       --panel: #ffffff;
-      --panel-border: #e5e7eb;
       --text: #111827;
       --muted: #6b7280;
-      --ring: rgba(40, 115, 255, 0.35);
     }
     * { box-sizing: border-box; }
-    body { 
-      margin: 0; 
-      font-family: "Pretendard", "Noto Sans KR", sans-serif; 
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
       background: var(--bg);
       color: var(--text);
       display: flex;
       flex-direction: column;
-      height: 100vh;
     }
-
-    /* 상단 헤더 */
     header {
       background: var(--brand);
-      color: white;
-      padding: 14px 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      color: #ffffff;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
-    .logo-wrap {
-      display: inline-flex;
+    .header-left {
+      display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
-    .logo-wrap img {
-      height: 24px;
+    .header-logo {
+      height: 32px;
       width: auto;
       display: block;
     }
-    .header-subtitle {
-      font-size: 12px;
-      opacity: 0.9;
+    .header-title {
+      font-size: 15px;
+      font-weight: 600;
     }
-
     main {
       flex: 1;
-      display: grid;
-      grid-template-columns: 0.8fr 1fr 1.4fr;
-      gap: 16px;
-      padding: 16px;
-      overflow: hidden;
-      min-height: 0;
-      max-width: 1400px;
       width: 100%;
+      max-width: 960px;
+      padding: 48px 20px 64px;
       margin: 0 auto;
-    }
-    @media (max-width: 1200px) {
-      main { grid-template-columns: 1fr 1fr; }
-      .col:last-child { grid-column: 1 / -1; }
-    }
-    @media (max-width: 860px) {
-      main { grid-template-columns: 1fr; }
-    }
-
-    .col {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: 12px;
-      padding: 16px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-      overflow: hidden;
-      min-height: 0;
+      gap: 32px;
     }
-
-    .col.col-scroll {
-      overflow-y: auto;
-      overflow-x: hidden;
-      min-height: 0;
-    }
-
-    h2 {
-      font-size: 16px;
-      margin: 0 0 12px;
-      font-weight: 600;
-      color: #374151;
+    .intro {
+      text-align: center;
       display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .intro h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .intro p {
+      margin: 0;
+      font-size: 16px;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .card {
+      background: var(--panel);
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-shadow: 0 6px 16px rgba(252, 107, 45, 0.08);
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .pill {
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-    }
-
-    /* 스크린리더 전용 텍스트 */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 1px, 1px);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    textarea {
-      width: 100%;
-      font-family: "Pretendard", monospace;
-      font-size: 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      padding: 10px;
-      line-height: 1.5;
-      resize: vertical;
-      min-height: 150px;
-      background: #f9fafb;
-      color: #111827;
-    }
-
-    textarea:focus {
-      outline: 2px solid #2873ff;
-      background: white;
-    }
-
-    button {
-      margin-top: 8px;
-      padding: 10px 16px;
-      background: var(--brand);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.15s ease;
-      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
-    }
-
-    button:hover {
-      background: var(--brand-600);
-      transform: translateY(-1px);
-    }
-
-    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px var(--ring);
-      transition: box-shadow 0.15s ease;
-    }
-
-    .template-selector {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .template-btn {
-      flex: 1;
-      margin-top: 0;
-      background: #e5e7eb;
-      color: #374151;
-      border: 1px solid #d1d5db;
-      transform: none;
-    }
-
-    .template-btn:hover {
-      background: #d1d5db;
-      transform: none;
-    }
-
-    .template-btn.active {
-      background: #2873ff;
-      color: #ffffff;
-      border-color: #2873ff;
-    }
-
-    .template-btn.active:hover {
-      background: #1e64e0;
-    }
-
-    .text-editor {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px;
-      margin-top: 12px;
-    }
-
-    .text-item {
-      margin-bottom: 16px;
-    }
-
-    .text-item label {
-      display: block;
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 4px;
-      font-weight: 500;
-    }
-
-    .text-item textarea {
-      width: 100%;
-      min-height: 40px;
-      font-size: 14px;
-      padding: 8px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      resize: vertical;
-      line-height: 1.5;
-      background: #f9fafb;
-    }
-
-    .text-item textarea:focus {
-      background: #fff;
-      outline: 2px solid #2873ff;
-    }
-
-    .preview {
-      flex: 1;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      background: white;
-      padding: 12px;
-      overflow-y: auto;
-      box-shadow: inset 0 0 0 1px #f3f4f6;
-    }
-
-    #htmlOutput {
-      background: #f9fafb;
-      color: #1f2937;
-      height: 180px;
-      resize: vertical;
-    }
-
-    .uploader {
-      margin-bottom: 16px;
-      padding: 14px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-    }
-
-    .uploader h3 {
-      margin: 0 0 12px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #1f2937;
-    }
-
-    .slot-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-bottom: 12px;
-      max-height: 280px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .slot-card {
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 12px;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
-    .slot-card h4 {
-      margin: 0;
-      font-size: 13px;
-      font-weight: 600;
-      color: #1f2937;
-    }
-
-    .slot-status {
-      font-size: 12px;
-      color: #4b5563;
-      min-height: 18px;
-    }
-
-    .slot-status.error {
-      color: #dc2626;
-    }
-
-    .drop-zone {
-      position: relative;
-      border: 2px dashed #d1d5db;
-      border-radius: 12px;
-      padding: 20px;
-      background: #ffffff;
-      text-align: center;
-      color: #6b7280;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .drop-zone button {
-      margin: 0;
-      background: #f3f4f6;
-      color: #1f2937;
+      padding: 6px 12px;
+      background: rgba(252, 107, 45, 0.12);
       border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 6px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .drop-zone button:hover {
-      background: #e5e7eb;
-    }
-
-    .drop-zone.dragover {
-      border-color: #2873ff;
-      background: #f0f6ff;
-      color: #1f2937;
-    }
-
-    .upload-status {
-      margin-top: 10px;
       font-size: 12px;
-      color: #4b5563;
-      min-height: 16px;
-    }
-
-    .upload-status.error {
-      color: #dc2626;
-    }
-
-    .ai-generator {
-      margin-bottom: 16px;
-      padding: 14px;
-      background: #eef2ff;
-      border: 1px solid #c7d2fe;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .ai-generator h3 {
-      margin: 0;
-      font-size: 14px;
       font-weight: 600;
-      color: #1d4ed8;
+      color: var(--brand-dark);
     }
-
-    .ai-brief {
-      width: 100%;
-      min-height: 120px;
-      border: 1px solid #c7d2fe;
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 13px;
-      line-height: 1.5;
-      resize: vertical;
-      background: #f8fafc;
-      color: #1f2937;
-    }
-
-    .ai-brief:focus {
-      outline: 2px solid #3b82f6;
-      background: #ffffff;
-    }
-
-    .ai-actions {
+    .card-actions {
+      margin-top: auto;
       display: flex;
-      gap: 8px;
       flex-wrap: wrap;
-      align-items: center;
+      gap: 10px;
     }
-
-    .ai-actions button {
-      padding: 8px 14px;
-      font-size: 13px;
-      font-weight: 600;
-      border-radius: 999px;
+    .card-actions button {
+      flex: 1 1 180px;
+      padding: 10px 18px;
+      border-radius: 12px;
       border: none;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
       background: var(--brand);
       color: #ffffff;
-      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
-      transition: background 0.15s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
-
-    .ai-actions button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    .card-actions button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(252, 107, 45, 0.25);
+      background: var(--brand-dark);
     }
-
-    .ai-actions button:hover:not(:disabled) {
-      background: var(--brand-600);
+    .saved-section {
+      margin-top: 48px;
+      padding: 24px;
+      background: var(--panel);
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(252, 107, 45, 0.05);
     }
-
-    .ai-status {
-      margin: 0;
+    .saved-section h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .saved-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .saved-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+    .saved-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+    }
+    .saved-item-meta {
       font-size: 12px;
-      color: #1f2937;
-      min-height: 16px;
+      color: #6b7280;
+      white-space: nowrap;
+      margin-right: 12px;
     }
-
-    .ai-status.error {
-      color: #dc2626;
+    .saved-item button {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      background: var(--brand);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
     }
-
-    /* 스크롤바 정리 */
-    *::-webkit-scrollbar { height: 10px; width: 10px; }
-    *::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    *::-webkit-scrollbar-track { background: transparent; }
-
+    .saved-item button:hover {
+      background: var(--brand-dark);
+    }
+    .saved-item .delete-btn {
+      background: #ef4444;
+    }
+    .saved-item .delete-btn:hover {
+      background: #dc2626;
+    }
+    .saved-empty {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    footer {
+      padding: 24px 0 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
   </style>
 </head>
 <body>
-  <header aria-label="PortOne Release Editor">
-    <div class="logo-wrap">
-      <img src="./assets/portone-logo.png" alt="PortOne" onerror="this.style.display='none'">
-      <span class="sr-only">PortOne</span>
+  <header>
+    <div class="header-left">
+      <img class="header-logo" src="/assets/portone-logo.png" alt="PortOne" />
+      <div>
+        <div class="header-title">PortOne 고객 문서 도우미</div>
+        <div style="font-size:12px; opacity:0.85;">릴리즈노트 · 공지사항 · 템플릿 관리</div>
+      </div>
     </div>
-    <span class="header-subtitle">고객 지원 문서 편집기</span>
   </header>
 
   <main>
-    <!-- 1️⃣ HTML 입력 -->
-    <div class="col col-scroll">
-      <h2>1️⃣ 원본 HTML</h2>
-      <div class="template-selector" id="templateSelector">
-        <button type="button" class="template-btn active" data-template="release">1️⃣ 릴리즈노트</button>
-        <button type="button" class="template-btn" data-template="notice">2️⃣ 공지사항</button>
-      </div>
-      <textarea id="htmlInput">
-<html lang="ko">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="x-apple-disable-message-reformatting">
-  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-  <title>PortOne 업데이트</title>
-</head>
-<body style="margin:0; padding:0; width:100%; background:#ffffff;">
-  <!-- wrapper -->
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0; table-layout:fixed;">
-    <tr>
-      <td align="center">
-        <!-- container -->
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0; font-family:Pretendard, Tahoma, Arial, sans-serif; width:600px; min-width:600px;">
-          <tr>
-            <td style="padding:0;">
-              <!-- 헤더 이미지 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center" style="padding:0 0 16px 0;">
-                    <img src="https://share1.cloudhq-mkt3.net/1189373c84d5d6.png" width="600" height="200" alt="" style="display:block; width:600px; height:auto; border:0; outline:none; text-decoration:none;">
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left" style="padding:16px 26px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">
-                      <span style="color:#2873ff;">날짜를 입력하세요</span> 반가운 포트원 소식
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left" style="padding:16px 26px 6px;">
-                    <h3 style="margin:0; font-size:24px; line-height:28px; font-weight:700; color:#111827;">제목을 입력하세요</h3>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="left" style="padding:6px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827; font-weight:400;">내용을 입력하세요</p>
-                  </td>
-                </tr>
-              </table>
+    <section class="intro" aria-label="문서 유형 안내">
+      <h1>어떤 문서를 작성할까요?</h1>
+      <p>작성하려는 문서 유형을 선택하면 맞춤형 편집기로 이동합니다.</p>
+    </section>
 
-              <!-- 2컬럼 카드 영역 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:16px 26px 14px;">
-                <tr>
-                  <td width="50%" valign="top" style="padding-right:8px;">
-                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#f5f8ff;">
-                      <tr>
-                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
-                          <div style="font-size:24px; line-height:32px; color:#2873ff;">➊</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 1 요약</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 1 내용</p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td width="50%" valign="top" style="padding-left:8px;">
-                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#f5f8ff;">
-                      <tr>
-                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
-                          <div style="font-size:24px; line-height:32px; color:#2873ff;">➋</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 2 요약</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 2 내용</p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 2컬럼 카드 영역 2 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:16px 26px 23px;">
-                <tr>
-                  <td width="50%" valign="top" style="padding-right:8px;">
-                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#f5f8ff;">
-                      <tr>
-                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
-                          <div style="font-size:24px; line-height:32px; color:#2873ff;">➌</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 3 요약</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 3 내용</p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td width="50%" valign="top" style="padding-left:8px;">
-                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#f5f8ff;">
-                      <tr>
-                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
-                          <div style="font-size:24px; line-height:32px; color:#2873ff;">➍</div>
-                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 4 요약</p>
-                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 4 내용</p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 구분선 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <div style="border-top:1px solid #d1d5db; width:100%; line-height:0; font-size:0;">&nbsp;</div>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 섹션 1 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 6px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 1 요약</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 1 제목</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 1 내용</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 0 16px;" align="center">
-        <!-- SLOT:section1 -->
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 구분선 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 섹션 2 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 2 요약</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 2 제목</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 2 내용</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 0 16px;" align="center">
-        <!-- SLOT:section2 -->
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 구분선 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 섹션 3 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 3 요약</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 3 제목</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 3 내용</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 0 16px;" align="center">
-        <!-- SLOT:section3 -->
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 구분선 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 섹션 4 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#2873ff;">주제 4 요약</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 26px 10px;">
-                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 4 제목</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 26px 16px;">
-                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 4 내용</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 0 16px;" align="center">
-        <!-- SLOT:section4 -->
-                    </td>
-                </tr>
-              </table>
-
-              <!-- 구분선 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="padding:16px 26px 16px;">
-                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 두 개의 하단 배너 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center" style="padding:16px 0 16px;">
-                    <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center" style="padding-right:8px;">
-                          <a href="https://developers.portone.io" target="_blank" rel="noopener" style="text-decoration:none;">
-                            <img src="https://share1.cloudhq-mkt3.net/eb86f6f97c4332.png" width="296" alt="파트너 정산 기능을 더 자세히 알고싶다면?" style="display:block; border-radius:12px; border:0;">
-                          </a>
-                        </td>
-                        <td align="center" style="padding-left:8px;">
-                          <a href="https://blog.portone.io/?filter=%ED%94%8C%EB%9E%AB%ED%8F%BC%20%EC%A0%95%EC%82%B0" target="_blank" rel="noopener" style="text-decoration:none;">
-                            <img src="https://share1.cloudhq-mkt3.net/43932b6afdba7f.png" width="296" alt="파트너 정산 도입 사례가 궁금하다면?" style="display:block; border-radius:12px; border:0;">
-                          </a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- 푸터 -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="left" style="padding:16px 26px 24px;">
-                    <p style="margin:0; font-size:12px; line-height:17px; color:#4b5563;">
-                      작성일자: 작성일자를 입력하세요<br>
-                      일반 문의: <a href="mailto:cs@portone.io" target="_blank" rel="noopener" style="color:#4b5563; text-decoration:underline; font-weight:600;">cs@portone.io</a> 또는 <span style="font-weight:600;">채널톡</span><br>
-                      기술지원 문의: <a href="mailto:support.b2b@portone.io" target="_blank" rel="noopener" style="color:#4b5563; text-decoration:underline; font-weight:600;">support.b2b@portone.io</a> 또는 파트너스 슬랙 채널<br><br>
-                      서울특별시 성동구 성수이로20길 16 제이케이타워 4층<br>
-                      Copyright © 2025 PortOne Korea Corp. All rights reserved.<br><br>
-                      <img src="https://share1.cloudhq-mkt3.net/6a54b5238d7802.png" width="94" height="16" alt="" style="display:block; border:0;">
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0 26px 16px; font-size:10px; color:#999999;">
-                    <a href="$%unsubscribe%$" style="color:#999999; text-decoration:none;">수신거부</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="height:16px; line-height:16px; font-size:0;">&nbsp;</td>
-                </tr>
-              </table>
-
-            </td>
-          </tr>
-        </table>
-        <!-- /container -->
-      </td>
-    </tr>
-  </table>
-  <!-- /wrapper -->
-</body>
-</html>
-      </textarea>
-      <button id="loadBtn">HTML 불러오기</button>
-
-      <h2 style="margin-top: 24px;">4️⃣ 수정된 HTML</h2>
-      <textarea id="htmlOutput" readonly></textarea>
-    </div>
-
-    <!-- 2️⃣ 텍스트 편집 -->
-    <div class="col col-scroll">
-      <h2>2️⃣ 텍스트 편집</h2>
-      <section class="uploader" aria-label="이미지 업로드">
-        <h3>이미지 업로드 (Cloudinary)</h3>
-        <p style="margin:0 0 12px; font-size:12px; color:#4b5563;">
-          아래 카드에 이미지를 드롭하거나 파일을 선택하면, 해당 위치의 이미지를 자동으로 교체합니다.
-        </p>
-        <div class="slot-grid">
-          <div class="slot-card" data-slot="section1">
-            <h4>섹션 1 이미지</h4>
-            <div class="drop-zone slot-drop" data-slot="section1">
-              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
-              <button type="button" class="slot-pick" data-slot="section1">파일 선택</button>
-              <input type="file" class="slot-file" data-slot="section1" accept="image/*" hidden>
-            </div>
-            <div class="slot-status" data-slot="section1"></div>
-          </div>
-          <div class="slot-card" data-slot="section2">
-            <h4>섹션 2 이미지</h4>
-            <div class="drop-zone slot-drop" data-slot="section2">
-              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
-              <button type="button" class="slot-pick" data-slot="section2">파일 선택</button>
-              <input type="file" class="slot-file" data-slot="section2" accept="image/*" hidden>
-            </div>
-            <div class="slot-status" data-slot="section2"></div>
-          </div>
-          <div class="slot-card" data-slot="section3">
-            <h4>섹션 3 이미지</h4>
-            <div class="drop-zone slot-drop" data-slot="section3">
-              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
-              <button type="button" class="slot-pick" data-slot="section3">파일 선택</button>
-              <input type="file" class="slot-file" data-slot="section3" accept="image/*" hidden>
-            </div>
-            <div class="slot-status" data-slot="section3"></div>
-          </div>
-          <div class="slot-card" data-slot="section4">
-            <h4>섹션 4 이미지</h4>
-            <div class="drop-zone slot-drop" data-slot="section4">
-              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
-              <button type="button" class="slot-pick" data-slot="section4">파일 선택</button>
-              <input type="file" class="slot-file" data-slot="section4" accept="image/*" hidden>
-            </div>
-            <div class="slot-status" data-slot="section4"></div>
-          </div>
+    <section class="grid" aria-label="문서 유형 선택">
+      <article class="card">
+        <span class="pill">릴리즈 소식</span>
+        <div>
+          <h2>제품 릴리즈 노트</h2>
+          <p>
+            신규 기능이나 개선 사항을 파트너에게 안내할 때 사용합니다.
+            제품군별 템플릿과 AI 초안 생성을 지원합니다.
+          </p>
         </div>
-        <div class="upload-status" id="uploadStatus"></div>
-      </section>
-      <div class="text-editor" id="textEditor"></div>
-    </div>
-
-    <!-- 3️⃣ 미리보기 -->
-    <div class="col">
-      <h2>3️⃣ 미리보기</h2>
-      <section class="ai-generator" aria-label="AI 자동 작성">
-        <h3>AI 자동 작성</h3>
-        <textarea id="aiBrief" class="ai-brief" placeholder="기획서나 요구사항을 붙여넣으면 AI가 릴리즈노트 초안을 작성합니다."></textarea>
-        <div class="ai-actions">
-          <button type="button" id="aiGenerateBtn">AI 작성</button>
+        <div class="card-actions">
+          <button type="button" data-document-type="release" data-product="payments">전자결제 릴리즈노트</button>
+          <button type="button" data-document-type="release" data-product="finance">재무솔루션 릴리즈노트</button>
         </div>
-        <p class="ai-status" id="aiStatus"></p>
-      </section>
-      <div id="preview" class="preview"></div>
-    </div>
+      </article>
+
+      <article class="card">
+        <span class="pill">공지/안내</span>
+        <div>
+          <h2>서비스 공지 메일</h2>
+          <p>
+            점검 공지나 정책 변경 안내처럼 공식 커뮤니케이션이 필요할 때 활용하세요.
+            심플한 레터 포맷과 CTA 버튼이 포함되어 있습니다.
+          </p>
+        </div>
+        <div class="card-actions">
+          <button type="button" data-document-type="notice">편집 시작하기</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="saved-section" aria-label="저장된 문서 목록">
+      <h2>저장된 문서</h2>
+      <div id="savedDocsContainer" class="saved-list"></div>
+    </section>
   </main>
 
+  <footer>
+    © 2025 PortOne Korea Corp. All rights reserved.
+  </footer>
+
   <script>
-    const htmlInput = document.getElementById('htmlInput');
-    const htmlOutput = document.getElementById('htmlOutput');
-    const preview = document.getElementById('preview');
-    const textEditor = document.getElementById('textEditor');
-    const loadBtn = document.getElementById('loadBtn');
-    const templateButtons = document.querySelectorAll('.template-btn');
-    const uploadStatus = document.getElementById('uploadStatus');
-    const aiBrief = document.getElementById('aiBrief');
-    const aiGenerateBtn = document.getElementById('aiGenerateBtn');
-    const aiStatus = document.getElementById('aiStatus');
+    const STORAGE_KEY = 'portoneSavedDocs';
 
-    const SLOT_CONFIG = {
-      section1: {
-        key: 'section1',
-        label: '섹션 1 이미지 (line 439)',
-        marker: '<!-- SLOT:section1 -->',
-        indent: '        ',
-        template: (url) =>
-          `<img src="${url}" alt="섹션 1 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
-      },
-      section2: {
-        key: 'section2',
-        label: '섹션 2 이미지 (line 476)',
-        marker: '<!-- SLOT:section2 -->',
-        indent: '        ',
-        template: (url) =>
-          `<img src="${url}" alt="섹션 2 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
-      },
-      section3: {
-        key: 'section3',
-        label: '섹션 3 이미지 (line 513)',
-        marker: '<!-- SLOT:section3 -->',
-        indent: '        ',
-        template: (url) =>
-          `<img src="${url}" alt="섹션 3 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
-      },
-      section4: {
-        key: 'section4',
-        label: '섹션 4 이미지 (line 550)',
-        marker: '<!-- SLOT:section4 -->',
-        indent: '        ',
-        template: (url) =>
-          `<img src="${url}" alt="섹션 4 이미지" style="display:block; width:600px; max-width:100%; height:auto; border:0;">`,
-      },
-    };
-
-    const slotElements = Object.fromEntries(
-      Object.keys(SLOT_CONFIG).map((key) => [
-        key,
-        {
-          dropZone: document.querySelector(`.slot-drop[data-slot="${key}"]`),
-          fileInput: document.querySelector(`.slot-file[data-slot="${key}"]`),
-          pickButton: document.querySelector(`.slot-pick[data-slot="${key}"]`),
-          status: document.querySelector(`.slot-status[data-slot="${key}"]`),
-        },
-      ])
-    );
-
-    const CLOUDINARY_DEFAULT = {
-      cloudName: 'dcam5f9ci',
-      uploadPreset: 'Portone',
-    };
-    let cloudinaryConfig = { ...CLOUDINARY_DEFAULT };
-
-    const releaseTemplate = htmlInput.value.trim();
-    const noticeTemplate = `
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PortOne 공지사항</title>
-</head>
-<body style="margin:0; padding:0; width:100%; background:#f3f4f6;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0;">
-    <tr>
-      <td align="center" style="padding:24px;">
-        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="width:600px; background:#ffffff; border-radius:16px; overflow:hidden; font-family:Pretendard, Tahoma, Arial, sans-serif;">
-          <tr>
-            <td style="padding:32px 32px 24px;">
-              <p style="margin:0; font-size:14px; line-height:20px; color:#6b7280;">PortOne 공지</p>
-              <h1 style="margin:8px 0 16px; font-size:28px; line-height:34px; color:#111827;">서비스 공지 제목을 입력하세요</h1>
-              <p style="margin:0; font-size:16px; line-height:26px; color:#374151;">
-                안녕하세요, 포트원입니다. 여기에 공지사항의 주요 내용을 작성해 주세요. 변경되는 내용, 일정, 영향 범위 등 필요한 정보를 자유롭게 기입할 수 있습니다.
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:0 32px 24px;">
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #e5e7eb; border-radius:12px;">
-                <tr>
-                  <td style="padding:20px;">
-                    <h2 style="margin:0 0 12px; font-size:20px; line-height:26px; color:#2873ff;">주요 안내</h2>
-                    <p style="margin:0; font-size:16px; line-height:24px; color:#1f2937;">
-                      - 일정: 2025년 2월 10일(월) 00:00 ~ 02:00<br>
-                      - 영향 범위: 결제 승인 및 정산 조회 기능 일시 중단<br>
-                      - 문의: support@portone.io
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:0 32px 32px;">
-              <p style="margin:0 0 16px; font-size:16px; line-height:24px; color:#374151;">
-                더 자세한 내용은 아래 버튼을 눌러 확인해주세요.
-              </p>
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center" style="background:#2873ff; border-radius:999px;">
-                    <a href="https://portone.io" target="_blank" rel="noopener" style="display:inline-block; padding:12px 32px; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none;">
-                      자세히 보기
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="background:#f9fafb; padding:24px 32px; color:#6b7280; font-size:12px; line-height:18px;">
-              본 메일은 포트원 서비스 안내를 위해 발송되었습니다. 문의가 필요하시면 cs@portone.io 로 연락 주세요.
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-`.trim();
-
-    const templates = {
-      release: releaseTemplate,
-      notice: noticeTemplate,
-    };
-
-    let textNodes = [];
-    let isUploading = false;
-    let aiAbortController = null;
-
-    function setUploadStatus(message, isError = false) {
-      if (!uploadStatus) return;
-      uploadStatus.textContent = message;
-      uploadStatus.classList.toggle('error', Boolean(isError));
-    }
-
-    function validateCloudinaryConfig() {
-      const { cloudName, uploadPreset } = cloudinaryConfig;
-      if (!cloudName || !uploadPreset || cloudName.startsWith('your_') || uploadPreset.startsWith('your_')) {
-        setUploadStatus('Cloudinary 설정이 필요합니다. 코드 상단의 CLOUDINARY_DEFAULT 값을 실제 값으로 바꿔주세요.', true);
-        return false;
-      }
-      return true;
-    }
-
-    function setSlotStatus(slotKey, message, isError = false) {
-      const slot = slotElements[slotKey];
-      if (!slot?.status) return;
-      slot.status.textContent = message;
-      slot.status.classList.toggle('error', Boolean(isError));
-    }
-
-    function copyToClipboard(value, successMessage) {
-      if (!navigator.clipboard) {
-        setUploadStatus('클립보드 접근을 지원하지 않는 환경입니다.', true);
-        return;
-      }
-      navigator.clipboard.writeText(value)
-        .then(() => setUploadStatus(successMessage))
-        .catch(() => setUploadStatus('클립보드 복사에 실패했습니다.', true));
-    }
-
-    async function uploadImageForSlot(slotKey, file) {
-      const config = SLOT_CONFIG[slotKey];
-      if (!config) return;
-      if (!validateCloudinaryConfig() || !file) return;
-      if (isUploading) {
-        setUploadStatus('다른 업로드 작업이 진행 중입니다. 잠시 후 다시 시도해주세요.', true);
-        return;
-      }
-
-      isUploading = true;
-      setUploadStatus(`[${config.label}] "${file.name}" 업로드 중...`);
-      setSlotStatus(slotKey, '업로드 중...');
-
-      const endpoint = `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`;
-      const data = new FormData();
-      data.append('file', file);
-      data.append('upload_preset', cloudinaryConfig.uploadPreset);
-
-      try {
-        const response = await fetch(endpoint, { method: 'POST', body: data });
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(errorText || `HTTP ${response.status}`);
-        }
-        const result = await response.json();
-        applyImageToSlot(slotKey, result.secure_url);
-        updateSlotPreview(slotKey, result.secure_url);
-        setSlotStatus(slotKey, '업로드가 완료되었습니다.');
-        setUploadStatus('업로드가 완료되었습니다.');
-      } catch (error) {
-        console.error('Cloudinary upload failed', error);
-        setSlotStatus(slotKey, '업로드 중 오류가 발생했습니다.', true);
-        setUploadStatus('업로드 중 오류가 발생했습니다. 설정을 확인해 주세요.', true);
-      } finally {
-        isUploading = false;
-      }
-    }
-
-    async function handleSlotFiles(slotKey, fileList) {
-      if (!fileList || fileList.length === 0) return;
-      const files = Array.from(fileList).filter(file => file.type.startsWith('image/'));
-      if (files.length === 0) {
-        setSlotStatus(slotKey, '이미지 파일만 업로드할 수 있습니다.', true);
-        setUploadStatus('이미지 파일만 업로드할 수 있습니다.', true);
-        return;
-      }
-      for (const file of files) {
-        await uploadImageForSlot(slotKey, file);
-      }
-    }
-
-    async function generateReleaseNoteWithAI() {
-      if (!aiBrief) return;
-      const brief = aiBrief.value.trim();
-      if (!brief) {
-        if (aiStatus) {
-          aiStatus.textContent = '기획서나 요구사항을 먼저 입력해주세요.';
-          aiStatus.classList.add('error');
-        }
-        return;
-      }
-
-      if (aiStatus) {
-        aiStatus.textContent = 'AI가 초안을 작성 중입니다...';
-        aiStatus.classList.remove('error');
-      }
-      if (aiGenerateBtn) aiGenerateBtn.disabled = true;
-
-      aiAbortController?.abort();
-      aiAbortController = new AbortController();
-
-      try {
-        const response = await fetch('/api/generateReleaseNote', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ brief }),
-          signal: aiAbortController.signal,
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(errorText || `HTTP ${response.status}`);
-        }
-
-        const result = await response.json();
-        if (result?.html) {
-          htmlInput.value = result.html;
-          loadHtml();
-          if (aiStatus) {
-            aiStatus.textContent = 'AI 초안이 적용되었습니다. 필요에 따라 수정하세요.';
-            aiStatus.classList.remove('error');
-          }
-        } else {
-          throw new Error('AI 응답을 해석하지 못했습니다.');
-        }
-      } catch (error) {
-        if (error.name === 'AbortError') {
-          if (aiStatus) {
-            aiStatus.textContent = 'AI 요청이 취소되었습니다.';
-            aiStatus.classList.add('error');
-          }
-        } else {
-          console.error('AI generation failed:', error);
-          if (aiStatus) {
-            aiStatus.textContent = `AI 작성 중 오류가 발생했습니다. ${error.message || ''}`.trim();
-            aiStatus.classList.add('error');
-          }
-        }
-      } finally {
-        if (aiGenerateBtn) aiGenerateBtn.disabled = false;
-        aiAbortController = null;
-      }
-    }
-
-    function applyImageToSlot(slotKey, url) {
-      const config = SLOT_CONFIG[slotKey];
-      if (!config || !htmlInput) return;
-
-      const html = htmlInput.value;
-      const marker = config.marker;
-      const markerIndex = html.indexOf(marker);
-      if (markerIndex === -1) {
-        setSlotStatus(slotKey, '해당 섹션을 찾을 수 없습니다. 템플릿을 확인해주세요.', true);
-        return;
-      }
-
-      const tdSignature = '<td style="padding:0 0 16px;" align="center">';
-      const tdOpenIndex = html.lastIndexOf(tdSignature, markerIndex);
-      if (tdOpenIndex === -1) {
-        setSlotStatus(slotKey, '이미지를 배치할 <td> 영역을 찾을 수 없습니다.', true);
-        return;
-      }
-
-      const contentStart = html.indexOf('>', tdOpenIndex) + 1;
-      const tdCloseIndex = html.indexOf('</td>', contentStart);
-      if (tdCloseIndex === -1) {
-        setSlotStatus(slotKey, '</td> 태그를 찾지 못했습니다.', true);
-        return;
-      }
-
-      const before = html.slice(0, markerIndex);
-      const after = html.slice(tdCloseIndex);
-      const snippet = `${config.indent}${marker}\n${config.indent}${config.template(url)}\n${config.indent}`;
-      htmlInput.value = `${before}${snippet}${after}`;
-
-      loadHtml();
-      setSlotStatus(slotKey, `${config.label}가 업데이트되었습니다.`);
-      setUploadStatus(`${config.label}가 업데이트되었습니다.`);
-    }
-
-    function updateSlotPreview(slotKey, url) {
-      const config = SLOT_CONFIG[slotKey];
-      const elements = slotElements[slotKey];
-      if (!config || !elements?.preview) return;
-      const snippet = config.template(url);
-
-      elements.preview.innerHTML = `
-        <img src="${url}" alt="${config.label}">
-        <div class="uploaded-item-actions">
-          <button type="button" data-action="copy-url">URL 복사</button>
-          <button type="button" data-action="copy-img">&lt;img&gt; 태그 복사</button>
-        </div>
-      `;
-
-      const actionButtons = elements.preview.querySelectorAll('button[data-action]');
-      actionButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          if (button.dataset.action === 'copy-url') {
-            copyToClipboard(url, '이미지 URL이 복사되었습니다.');
-          } else {
-            copyToClipboard(snippet, '<img> 태그가 복사되었습니다.');
-          }
-        });
+    document.querySelectorAll('button[data-document-type]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const type = button.getAttribute('data-document-type') || 'release';
+        const params = new URLSearchParams({ type });
+        const product = button.getAttribute('data-product');
+        if (product) params.set('product', product);
+        window.location.href = `editor.html?${params.toString()}`;
       });
-    }
-
-    function refreshSlotPreviewsFromHtml() {
-      const html = htmlInput?.value || '';
-      Object.entries(SLOT_CONFIG).forEach(([slotKey, config]) => {
-        const elements = slotElements[slotKey];
-        if (!elements) return;
-
-        const markerIndex = html.indexOf(config.marker);
-        if (markerIndex === -1) {
-          if (elements.preview) elements.preview.innerHTML = '';
-          setSlotStatus(slotKey, '');
-          return;
-        }
-
-        const tdSignature = '<td style="padding:0 0 16px;" align="center">';
-        const tdOpenIndex = html.lastIndexOf(tdSignature, markerIndex);
-        if (tdOpenIndex === -1) return;
-
-        const contentStart = html.indexOf('>', tdOpenIndex) + 1;
-        const tdCloseIndex = html.indexOf('</td>', contentStart);
-        if (tdCloseIndex === -1) return;
-
-        const contents = html.slice(contentStart, tdCloseIndex);
-        const imgMatch = contents.match(/<img[^>]+src="([^"]+)"[^>]*>/i);
-
-        if (imgMatch) {
-          updateSlotPreview(slotKey, imgMatch[1]);
-          setSlotStatus(slotKey, '현재 이미지가 설정되어 있습니다.');
-        } else {
-          if (elements.preview) elements.preview.innerHTML = '';
-          setSlotStatus(slotKey, '이미지가 비어 있습니다.');
-        }
-      });
-    }
-
-    function selectTemplate(key) {
-      const template = templates[key];
-      if (!template) return;
-      htmlInput.value = template;
-      templateButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.template === key);
-      });
-      loadHtml();
-    }
-
-    function loadHtml() {
-      const html = htmlInput.value;
-      preview.innerHTML = html;
-      textEditor.innerHTML = '';
-      textNodes = [];
-      traverse(preview);
-
-      textNodes.forEach((item, idx) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'text-item';
-
-        const label = document.createElement('label');
-        label.textContent = `텍스트 ${idx + 1}`;
-        wrap.appendChild(label);
-
-        const textarea = document.createElement('textarea');
-        textarea.value = item.node.nodeValue.trim();
-        textarea.addEventListener('input', (e) => {
-          e.target.style.height = 'auto';
-          e.target.style.height = `${e.target.scrollHeight}px`;
-          item.node.nodeValue = e.target.value;
-          htmlOutput.value = preview.innerHTML.trim();
-        });
-        textarea.style.height = `${textarea.scrollHeight}px`;
-        wrap.appendChild(textarea);
-
-        textEditor.appendChild(wrap);
-      });
-
-      htmlOutput.value = preview.innerHTML.trim();
-      refreshSlotPreviewsFromHtml();
-    }
-
-    function traverse(node) {
-      node.childNodes.forEach(child => {
-        if (child.nodeType === Node.TEXT_NODE) {
-          const text = child.nodeValue.trim();
-          if (text.length > 0) textNodes.push({ node: child });
-        } else {
-          traverse(child);
-        }
-      });
-    }
-
-    if (!validateCloudinaryConfig()) {
-      // 이미 오류 메시지를 표시했으므로 추가 안내는 생략합니다.
-    } else {
-      setUploadStatus('각 섹션 카드에 이미지를 드롭하거나 파일을 선택하세요.');
-    }
-
-    Object.entries(slotElements).forEach(([slotKey, elements]) => {
-      if (elements.dropZone) {
-        ['dragenter', 'dragover'].forEach((eventName) => {
-          elements.dropZone.addEventListener(eventName, (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            elements.dropZone.classList.add('dragover');
-          });
-        });
-
-        ['dragleave', 'dragend', 'drop'].forEach((eventName) => {
-          elements.dropZone.addEventListener(eventName, (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            elements.dropZone.classList.remove('dragover');
-          });
-        });
-
-        elements.dropZone.addEventListener('drop', (event) => {
-          handleSlotFiles(slotKey, event.dataTransfer?.files);
-        });
-
-        elements.dropZone.addEventListener('click', () => {
-          elements.fileInput?.click();
-        });
-      }
-
-      if (elements.pickButton && elements.fileInput) {
-        elements.pickButton.addEventListener('click', () => elements.fileInput.click());
-        elements.fileInput.addEventListener('change', () => {
-          handleSlotFiles(slotKey, elements.fileInput.files);
-          elements.fileInput.value = '';
-        });
-      }
     });
 
-    templateButtons.forEach(btn => {
-      btn.addEventListener('click', () => selectTemplate(btn.dataset.template));
-    });
-
-    loadBtn.addEventListener('click', loadHtml);
-    if (aiGenerateBtn) {
-      aiGenerateBtn.addEventListener('click', generateReleaseNoteWithAI);
+    function loadSavedDocs() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed;
+      } catch (error) {
+        console.warn('Failed to parse saved docs', error);
+        return [];
+      }
     }
-    selectTemplate('release');
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      try {
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      } catch {
+        return '';
+      }
+    }
+
+    function renderSavedDocs() {
+      const container = document.getElementById('savedDocsContainer');
+      if (!container) return;
+      const docs = loadSavedDocs().sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+      container.innerHTML = '';
+      if (docs.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'saved-empty';
+        empty.textContent = '아직 저장된 문서가 없습니다. 편집기에서 저장하면 여기에서 확인할 수 있어요.';
+        container.appendChild(empty);
+        return;
+      }
+
+      docs.forEach((doc) => {
+        const item = document.createElement('div');
+        item.className = 'saved-item';
+
+        const title = document.createElement('div');
+        title.className = 'saved-item-title';
+        title.textContent = doc.title || '제목 없음';
+
+        const meta = document.createElement('div');
+        meta.className = 'saved-item-meta';
+        const timestamp = formatDate(doc.updatedAt);
+        meta.textContent = timestamp ? timestamp : '';
+
+        const openBtn = document.createElement('button');
+        openBtn.type = 'button';
+        openBtn.textContent = '열기';
+        openBtn.addEventListener('click', () => {
+          const params = new URLSearchParams({ saved: doc.id });
+          if (doc.type) params.set('type', doc.type);
+          if (doc.product) params.set('product', doc.product);
+          window.location.href = `editor.html?${params.toString()}`;
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '삭제';
+        deleteBtn.addEventListener('click', () => {
+          const ok = window.confirm(`"${doc.title || '제목 없음'}" 문서를 삭제할까요?`);
+          if (!ok) return;
+          const next = loadSavedDocs().filter((itemDoc) => itemDoc.id !== doc.id);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          renderSavedDocs();
+        });
+
+        item.appendChild(title);
+        if (timestamp) item.appendChild(meta);
+        item.appendChild(openBtn);
+        item.appendChild(deleteBtn);
+        container.appendChild(item);
+      });
+    }
+
+    renderSavedDocs();
+    window.addEventListener('portoneSavedDocsUpdated', renderSavedDocs);
   </script>
 </body>
 </html>
+<script>
+  window.addEventListener('portoneSavedDocsUpdated', renderSavedDocs);
+</script>
