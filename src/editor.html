@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>PortOne 고객 지원 문서 편집기</title>
+  <link rel="stylesheet" href="./styles/base.css">
+  <link rel="stylesheet" href="./styles/editor.css">
+</head>
+<body>
+  <header aria-label="PortOne Release Editor">
+    <div class="header-inner">
+      <div class="brand" aria-label="PortOne 문서 허브">
+        <img src="/assets/portone-logo.png" alt="" onerror="this.style.display='none'">
+        <div class="brand-text">
+          <strong>PortOne 문서 허브</strong>
+          <span>고객 지원 문서 편집기</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="header-link" aria-label="문서 선택으로 돌아가기">
+          ← 문서 선택으로
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero editor-hero" aria-labelledby="editorTitle">
+      <span id="docTypeBadge" class="badge">릴리즈노트 템플릿</span>
+      <h1 id="editorTitle" class="intro-title">문서를 빠르게 다듬고 공유하세요</h1>
+      <p class="intro-sub">템플릿을 불러오고 내용을 조정한 뒤 HTML을 복사하거나 저장할 수 있어요.</p>
+      <div class="hero-deck">
+        <span><strong>AI 제안</strong>으로 초안을 만들고</span>
+        <span><strong>라이브 미리보기</strong>로 결과를 확인하세요.</span>
+      </div>
+    </section>
+    <div class="editor-grid">
+      <!-- 1️⃣ HTML 입력 -->
+      <div class="col col-scroll">
+      <h2>1️⃣ 원본 HTML</h2>
+      <textarea id="htmlInput">
+<html lang="ko">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <title>PortOne 업데이트</title>
+</head>
+<body style="margin:0; padding:0; width:100%; background:#ffffff;">
+  <!-- wrapper -->
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0; table-layout:fixed;">
+    <tr>
+      <td align="center">
+        <!-- container -->
+        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="border-spacing:0; font-family:Pretendard, Tahoma, Arial, sans-serif; width:600px; min-width:600px;">
+          <tr>
+            <td style="padding:0;">
+              <!-- 헤더 이미지 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" style="padding:0 0 16px 0;">
+                    <img src="https://share1.cloudhq-mkt3.net/1189373c84d5d6.png" width="600" height="200" alt="" style="display:block; width:600px; height:auto; border:0; outline:none; text-decoration:none;">
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding:16px 26px;">
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">
+                      <span style="color:#FC6B2D;">날짜를 입력하세요</span> 반가운 포트원 소식
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding:16px 26px 6px;">
+                    <h3 style="margin:0; font-size:24px; line-height:28px; font-weight:700; color:#111827;">제목을 입력하세요</h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding:6px 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827; font-weight:400;">내용을 입력하세요</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 2컬럼 카드 영역 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:16px 26px 14px;">
+                <tr>
+                  <td width="50%" valign="top" style="padding-right:8px;">
+                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#fff4ec;">
+                      <tr>
+                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
+                          <div style="font-size:24px; line-height:32px; color:#FC6B2D;">➊</div>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 1 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 1 내용</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="50%" valign="top" style="padding-left:8px;">
+                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#fff4ec;">
+                      <tr>
+                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
+                          <div style="font-size:24px; line-height:32px; color:#FC6B2D;">➋</div>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 2 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 2 내용</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 2컬럼 카드 영역 2 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:16px 26px 23px;">
+                <tr>
+                  <td width="50%" valign="top" style="padding-right:8px;">
+                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#fff4ec;">
+                      <tr>
+                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
+                          <div style="font-size:24px; line-height:32px; color:#FC6B2D;">➌</div>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 3 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 3 내용</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="50%" valign="top" style="padding-left:8px;">
+                    <table role="presentation" width="260" height="140" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate; border-radius:16px; background:#fff4ec;">
+                      <tr>
+                        <td valign="middle" align="center" style="padding:0; height:140px; text-align:center;">
+                          <div style="font-size:24px; line-height:32px; color:#FC6B2D;">➍</div>
+                          <p style="margin:6px 0 0; font-size:18px; line-height:21px; font-weight:600; color:#111827;">주제 4 요약</p>
+                          <p style="margin:2px 0 0; font-size:14px; line-height:17px; font-weight:500; color:#4b5563;">주제 4 내용</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 구분선 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <div style="border-top:1px solid #d1d5db; width:100%; line-height:0; font-size:0;">&nbsp;</div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 섹션 1 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 6px;">
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#FC6B2D;">주제 1 요약</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 26px 10px;">
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 1 제목</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 1 내용</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 16px;" align="center">
+        <!-- SLOT:section1 -->
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 구분선 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 섹션 2 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#FC6B2D;">주제 2 요약</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 26px 10px;">
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 2 제목</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 2 내용</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 16px;" align="center">
+        <!-- SLOT:section2 -->
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 구분선 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 섹션 3 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#FC6B2D;">주제 3 요약</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 26px 10px;">
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 3 제목</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 3 내용</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 16px;" align="center">
+        <!-- SLOT:section3 -->
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 구분선 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 섹션 4 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:19px; font-weight:600; color:#FC6B2D;">주제 4 요약</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 26px 10px;">
+                    <p style="margin:0; font-size:20px; line-height:24px; font-weight:600; color:#111827;">주제 4 제목</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 26px 16px;">
+                    <p style="margin:0; font-size:16px; line-height:23px; color:#111827;">주제 4 내용</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 16px;" align="center">
+        <!-- SLOT:section4 -->
+                    </td>
+                </tr>
+              </table>
+
+              <!-- 구분선 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:16px 26px 16px;">
+                    <div style="border-top:1px solid #d1d5db; width:100%; font-size:0; line-height:0;">&nbsp;</div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 두 개의 하단 배너 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" style="padding:16px 0 16px;">
+                    <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td align="center" style="padding-right:8px;">
+                          <a href="https://developers.portone.io" target="_blank" rel="noopener" style="text-decoration:none;">
+                            <img src="https://share1.cloudhq-mkt3.net/eb86f6f97c4332.png" width="296" alt="파트너 정산 기능을 더 자세히 알고싶다면?" style="display:block; border-radius:12px; border:0;">
+                          </a>
+                        </td>
+                        <td align="center" style="padding-left:8px;">
+                          <a href="https://blog.portone.io/?filter=%ED%94%8C%EB%9E%AB%ED%8F%BC%20%EC%A0%95%EC%82%B0" target="_blank" rel="noopener" style="text-decoration:none;">
+                            <img src="https://share1.cloudhq-mkt3.net/43932b6afdba7f.png" width="296" alt="파트너 정산 도입 사례가 궁금하다면?" style="display:block; border-radius:12px; border:0;">
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- 푸터 -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="left" style="padding:16px 26px 24px;">
+                    <p style="margin:0; font-size:12px; line-height:17px; color:#4b5563;">
+                      작성일자: 작성일자를 입력하세요<br>
+                      일반 문의: <a href="mailto:cs@portone.io" target="_blank" rel="noopener" style="color:#4b5563; text-decoration:underline; font-weight:600;">cs@portone.io</a> 또는 <span style="font-weight:600;">채널톡</span><br>
+                      기술지원 문의: <a href="mailto:support.b2b@portone.io" target="_blank" rel="noopener" style="color:#4b5563; text-decoration:underline; font-weight:600;">support.b2b@portone.io</a> 또는 파트너스 슬랙 채널<br><br>
+                      서울특별시 성동구 성수이로20길 16 제이케이타워 4층<br>
+                      Copyright © 2025 PortOne Korea Corp. All rights reserved.<br><br>
+                      <img src="https://share1.cloudhq-mkt3.net/6a54b5238d7802.png" width="94" height="16" alt="" style="display:block; border:0;">
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 26px 16px; font-size:10px; color:#999999;">
+                    <a href="$%unsubscribe%$" style="color:#999999; text-decoration:none;">수신거부</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="height:16px; line-height:16px; font-size:0;">&nbsp;</td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+        <!-- /container -->
+      </td>
+    </tr>
+  </table>
+  <!-- /wrapper -->
+</body>
+</html>
+      </textarea>
+      <button id="loadBtn">HTML 불러오기</button>
+
+      <h2 style="margin-top: 24px;">4️⃣ 수정된 HTML</h2>
+      <textarea id="htmlOutput" readonly></textarea>
+      <div class="utility-actions">
+        <button type="button" id="saveHtmlBtn">저장하기</button>
+        <button type="button" id="copyHtmlBtn">수정된 HTML 복사</button>
+        <a href="https://stibee.com/login" target="_blank" rel="noopener" id="stibeeBtn" aria-label="스티비 바로가기">
+          <img src="/assets/Stibee-alternate-logo.png" alt="">
+          <span class="sr-only">스티비 바로가기</span>
+        </a>
+      </div>
+      <p class="status-line" id="copyStatus"></p>
+      <p class="status-line" id="saveStatus"></p>
+    </div>
+
+    <!-- 2️⃣ 텍스트 편집 -->
+    <div class="col col-scroll">
+      <h2>2️⃣ 텍스트 편집</h2>
+      <section class="uploader" aria-label="이미지 업로드">
+        <h3>이미지 업로드 (Cloudinary)</h3>
+        <p style="margin:0 0 12px; font-size:12px; color:#4b5563;">
+          아래 카드에 이미지를 드롭하거나 파일을 선택하면, 해당 위치의 이미지를 자동으로 교체합니다.
+        </p>
+        <div class="slot-grid">
+          <div class="slot-card" data-slot="section1">
+            <h4>섹션 1 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section1">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section1">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section1" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section1"></div>
+          </div>
+          <div class="slot-card" data-slot="section2">
+            <h4>섹션 2 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section2">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section2">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section2" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section2"></div>
+          </div>
+          <div class="slot-card" data-slot="section3">
+            <h4>섹션 3 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section3">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section3">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section3" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section3"></div>
+          </div>
+          <div class="slot-card" data-slot="section4">
+            <h4>섹션 4 이미지</h4>
+            <div class="drop-zone slot-drop" data-slot="section4">
+              <p style="margin:0; font-size:13px;">드래그 & 드롭 또는 클릭하여 업로드</p>
+              <button type="button" class="slot-pick" data-slot="section4">파일 선택</button>
+              <input type="file" class="slot-file" data-slot="section4" accept="image/*" hidden>
+            </div>
+            <div class="slot-status" data-slot="section4"></div>
+          </div>
+        </div>
+        <div class="upload-status" id="uploadStatus"></div>
+      </section>
+      <div class="text-editor" id="textEditor"></div>
+    </div>
+
+    <!-- 3️⃣ 미리보기 -->
+    <div class="col">
+      <h2>3️⃣ 미리보기</h2>
+      <section class="ai-generator" aria-label="AI 자동 작성">
+        <h3>AI 자동 작성</h3>
+        <textarea id="aiBrief" class="ai-brief" placeholder="기획서나 요구사항을 붙여넣으면 AI가 릴리즈노트 초안을 작성합니다."></textarea>
+        <div class="ai-actions">
+          <button type="button" id="aiGenerateBtn">AI 작성</button>
+        </div>
+        <p class="ai-status" id="aiStatus"></p>
+      </section>
+      <div id="preview" class="preview"></div>
+    </div>
+    </div>
+  </main>
+
+    <script type="module" src="./scripts/editor.js"></script>
+
+</body>
+</html>
