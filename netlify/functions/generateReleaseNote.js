@@ -56,12 +56,12 @@ const RESPONSE_SCHEMA = {
         hero_date: { type: 'string', description: '예: 10월 31일' },
         hero_title: {
           type: 'string',
-          description: '짧은 제목 (간결, 명령문/명사형)',
+          description: '짧은 제목 (간결, 명령문/명사형) (예 : 정발행 세금계산서 출시 안내)',
           maxLength: 40,
         },
         hero_intro: {
           type: 'string',
-          description: '인사로 시작하고 길지 않게 요약 (예: 안녕하세요 …)',
+          description: '무조건 "안녕하세요, 파트너 정산 자동화 팀입니다." 로 시작하고 한두 문장으로 짧게 요약하세요.',
           maxLength: 160,
         },
         cards: {
@@ -73,8 +73,8 @@ const RESPONSE_SCHEMA = {
             required: ['title', 'summary'],
             additionalProperties: false,
             properties: {
-              title: { type: 'string', maxLength: 28 },
-              summary: { type: 'string', maxLength: 90 },
+              title: { type: 'string', maxLength: 20 },
+              summary: { type: 'string', maxLength: 70 },
             },
           },
         },
@@ -148,13 +148,17 @@ async function getDraft({ apiKey, brief }) {
         {
           role: 'system',
           content:
-            '역할: 당신은 PortOne B2B 고객용 릴리즈 노트를 한국어로 간결하게 작성하는 비서입니다.\n' +
+            '역할: 당신은 포트원 B2B 고객용 릴리즈 노트를 한국어로 간결하게 작성하는 비서입니다.\n' +
+            '- 이 문서는 고객 지원용 공개 문서입니다. 입력되는 내부 기획서를 고객이 읽는 릴리즈 노트/공지 톤으로 바꾸세요.\n' +
+            '- 내부 지시/사내 용어/개발 관련 용어는 제거하고, 고객 혜택/영향/액션(어디서 무엇을 할 수 있는지)을 우선으로 정리하세요.\n' +
+            '- cards[i].title 과 sections[i].label 은 같은 값이어야 합니다(각 인덱스별 동일 토픽).\n' +
             '- JSON 스키마에 정확히 맞춰서만 응답하세요(추가 필드 금지).\n' +
             '- hero_title: 매우 짧은 제목(명사형/명령형, 최대 40자).\n' +
-            "- hero_intro: 반드시 '안녕하세요'로 시작하고 한 문장으로 짧게 요약(최대 160자).\n" +
+            "- hero_intro: 반드시 '안녕하세요, 파트너 정산 자동화팀 입니다.'로 시작하고 한두 문장으로 짧게 요약(최대 160자).\n" +
             '- cards: 4개, title은 최대 28자, summary는 최대 90자.\n' +
             '- sections: 4개, label 최대 20자, title 최대 70자, body 최대 800자.\n' +
-            '- 모든 문자열은 줄바꿈 제거·공백 정리.\n',
+            '- 모든 문자열에서 줄바꿈을 진행할 떄 HTML 태그 <br> 을 작성하세요.\n' +
+            '- 모든 문자열에서 공백을 제거하세요.\n',
         },
         { role: 'user', content: `기획서:\n${brief}` },
       ],
@@ -188,9 +192,12 @@ async function getDraft({ apiKey, brief }) {
           role: 'system',
           content:
             '역할: 한국어 릴리즈 노트 작성. JSON만 출력.\n' +
+            '- 고객 지원용 공개 문서로 작성. 내부 기획서를 고객이 이해할 수 있는 공지/릴리즈 노트 톤으로 변환.\n' +
+            '- 내부 지시/사내 용어/개발용 표현 제거, 고객 혜택/영향/액션 중심.\n' +
+            '- cards[i].title 과 sections[i].label 은 반드시 동일.\n' +
             '- hero_title: 짧은 제목(<=40자)\n' +
-            "- hero_intro: '안녕하세요'로 시작, 한 문장(<=160자)\n" +
-            '- cards: 4개, title<=28자, summary<=90자\n' +
+            "- hero_intro: '안녕하세요, 파트너 정산 자동화 팀입니다.'로 시작, 한 문장(<=160자)\n" +
+            '- cards: 4개, title<=28자, summary<=70자\n' +
             '- sections: 4개, label<=20자, title<=70자, body<=800자\n' +
             '- 추가 텍스트/설명 금지. JSON 외 출력 금지.',
         },
@@ -283,15 +290,19 @@ function ensureDraft(ai, brief) {
   const sections = Array.isArray(ai.sections) && ai.sections.length > 0 ? ai.sections.slice(0,4) : generatedSections;
 
   // 각 카드/섹션의 필수 필드 보정(비어 있으면 간단히 채움)
+  // 우선 각 인덱스의 공통 토픽을 결정해 cards.title과 sections.label을 동일하게 맞춘다
   const safeCards = Array.from({ length: 4 }, (_, i) => ({
-    title: normalize(cards[i]?.title || generatedCards[i].title, 60),
+    title: normalize(cards[i]?.title || sections[i]?.label || generatedCards[i].title, 28),
     summary: normalize(cards[i]?.summary || generatedCards[i].summary, 120),
   }));
-  const safeSections = Array.from({ length: 4 }, (_, i) => ({
-    label: normalize(sections[i]?.label || generatedSections[i].label, 30),
-    title: normalize(sections[i]?.title || generatedSections[i].title, 80),
-    body: normalize(sections[i]?.body || generatedSections[i].body, 700),
-  }));
+  const safeSections = Array.from({ length: 4 }, (_, i) => {
+    const topic = safeCards[i].title; // cards.title과 동일하게 고정
+    return {
+      label: normalize(topic, 20),
+      title: normalize(sections[i]?.title || generatedSections[i].title, 80),
+      body: normalize(sections[i]?.body || generatedSections[i].body, 700),
+    };
+  });
 
   return { hero_date, hero_title, hero_intro, footer_date, cards: safeCards, sections: safeSections };
 }
