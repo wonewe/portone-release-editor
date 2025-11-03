@@ -187,8 +187,7 @@ async function handler(req, res) {
   }
 }
 
-module.exports = handler;
-module.exports.default = handler;
+export default handler;
 
 async function getDraft({ apiKey, brief }) {
   const fewshotMessages = FEWSHOT_EXAMPLES.flatMap(({ brief: exampleBrief, draft }) => {
